@@ -23,4 +23,5 @@ class Model:
         obj = Bot_class( market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee)
         obj.start_bot()
         print("in creating_bot_instance")
+        print("branch2")
 
