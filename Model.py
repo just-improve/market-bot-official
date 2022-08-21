@@ -1,5 +1,7 @@
 from Bot import Bot_class
 
+
+
 #model to czyste dane
 class Model:
     def __init__(self):
@@ -22,5 +24,7 @@ class Model:
         fee = float (fee)
         obj = Bot_class( market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee)
         obj.start_bot()
+        print("controller test branch")
+        print("controller test branch222")
         print("in creating_bot_instance")
 
