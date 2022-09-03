@@ -33,8 +33,8 @@ class Bot_class:
         self.list_of_tup_trades=[]
         self.last_closed_result=0    # jest kalkulowany bez fee
         self.total_trades_result = 0
-        self.list_of_trades_results = []   #trejdy bez fee każdy wynik poszczególny
-        self.list_of_trades_total_running_results = []      #wyniki z tylko z trejdów ale sumowane na bieżąco
+        self.list_of_trades_results = []
+        self.list_of_trades_total_running_results = []
         self.fee=fee
         self.sum_of_fees=0
         self.total_result=0
@@ -113,10 +113,8 @@ class Bot_class:
                 print(ask_last)
                 print(bid_last)
                 print("long entry initialize")
-
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                print(str(date_time_current))
-                trade = ("long", ask_last, str(date_time_current))
+                trade = ("long", ask_last, str(str(date_time_current)))
 
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "long"
@@ -156,8 +154,7 @@ class Bot_class:
                 print("short entry initialize")
 
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                print(str(date_time_current))
-                trade = ("long", ask_last, str(date_time_current))
+                trade = ("short", bid_last, str(str(date_time_current)))
                 #trade = ("short", ask_last)
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "short"
@@ -197,11 +194,10 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.last_entry_price) + " self.last_entry_price")
-                print(str(self.last_long_or_short) + " self.last_long_or_short")
-
+                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
                 print(str(self.running_result)+" self.running_result")
+                print(str(self.total_result) + " total_result")
 
                 print(ask_last)
                 print(bid_last)
@@ -211,11 +207,15 @@ class Bot_class:
                 if bid_last <= short_price_will:
                     long_status = False
                     short_status = True
+                    print("trejd short_status z long_status ")
                     long_price_will = ask_last * self.gap_long
                     short_profit_price_will = bid_last * self.gap_profit_short
                     long_profit_price_will = 0
                     short_price_will = 0
-                    trade = ("short", bid_last)
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ("short", bid_last, str(str(date_time_current)))
+
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
 
@@ -244,6 +244,8 @@ class Bot_class:
                 elif ask_last >= long_profit_price_will:
                     long_profit_status = True
                     long_status = False
+                    print("trejd long_profit_status z long_status")
+
                     long_profit_price_will = 0
                     long_profit_price_will = 0
                     long_price_will = 0
@@ -251,17 +253,17 @@ class Bot_class:
                     short_price_lps_will = ask_last * self.gap_short
                     print("W LongStatus do LongProfitStatus ")
 
-
             while short_status:
                 print("\nShort status and now pause 2sec")
                 time.sleep(self.time_sleep)
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.last_entry_price) + " self.last_entry_price")
-                print(str(self.last_long_or_short) + " self.last_long_or_short")
+                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 print(str(self.running_result)+" self.running_result")
+                print(str(self.total_result) + " total_result")
+
 
                 print(ask_last)
                 print(bid_last)
@@ -271,10 +273,14 @@ class Bot_class:
                 if ask_last > long_price_will:
                     long_status = True
                     short_status = False
+                    print("trejd long_status z short_status")
                     short_profit_price_will = 0
                     short_price_will = bid_last * self.gap_short
                     long_profit_price_will = ask_last * self.gap_profit_long
-                    trade = ("long", ask_last)
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ("long", ask_last, str(date_time_current))
+
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
 
@@ -302,6 +308,7 @@ class Bot_class:
                 elif bid_last < short_profit_price_will:
                     short_profit_status = True
                     short_status = False
+                    print("trejd short_profit_status z short_status")
                     long_price_sps_will = bid_last * self.gap_long
                     print("W shortStatus do short profit status")
 
@@ -315,11 +322,14 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
+                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 current_ask_decrease = ask_last * self.gap_short
                 print(ask_last)
                 print(bid_last)
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
                 print(str(self.running_result)+" self.running_result")
+                print(str(self.total_result) + " total_result")
+
 
 
                 print(str(short_price_lps_will) + " short_price_lps_will przed ")
@@ -328,13 +338,16 @@ class Bot_class:
                 print(str(short_price_lps_will) + " short_price_lps_will po ")
 
                 if bid_last <= short_price_lps_will:
-                    print("W Long profit status go to short status")
+                    print("trejd short_status z long_profit_status")
                     short_status = True
                     long_profit_status = False
                     long_price_will = ask_last * self.gap_long
                     short_profit_price_will = bid_last * self.gap_profit_short
                     short_price_lps_will = 0
-                    trade = ("short", bid_last)
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ("short", bid_last, str(date_time_current))
+
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
                     self.list_of_tup_trades.append(trade)
@@ -363,9 +376,11 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-
+                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 print(str(self.running_result)+" self.running_result")
+                print(str(self.total_result) + " total_result")
+
 
                 print(ask_last)
                 print(bid_last)
@@ -379,10 +394,14 @@ class Bot_class:
                 if ask_last > long_price_sps_will:
                     long_status = True
                     short_profit_status = False
+                    print("trejd long_status z  short_profit_status")
+
                     short_price_will = ask_last * self.gap_short
                     long_profit_price_will = ask_last * self.gap_profit_long
 
-                    trade = ("long", ask_last)
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ("long", ask_last, str(date_time_current))
+
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
 
