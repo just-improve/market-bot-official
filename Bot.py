@@ -1,5 +1,6 @@
 import time
 
+from pool_executor import thread_pool_executor, submit_to_pool_executor
 from test import Test
 import datetime
 import tkinter as tk
@@ -65,6 +66,7 @@ class Bot_class:
     def __del__(self):
         Bot_class.print_my_variables(self)
 
+    @submit_to_pool_executor(thread_pool_executor)
     def start_bot(self):
         obj_ftx_methods = FtxClientWJ()
 
