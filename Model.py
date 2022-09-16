@@ -4,19 +4,12 @@ from Bot import Bot_class
 class Model:
     def __init__(self):
         self.value = ''
-        self.market_name=""
-        self.gap_reverse_long = 0.0
-        self.gap_reverse_short = 0.0
-        self.gap_profit_long = 0.0
-        self.gap_profit_short = 0.0
-        self.refresh_time = 0
         self.starting_date = 0
         self.list_of_trades=[]
         self.last_closed_result_no_fee = 0
         self.total_trades_result = 0
         self.list_of_trades_results=[]
         self.list_of_trades_total_running_results = []
-
         self.sum_of_fees = 0
         self.total_result = 0
         self.running_result = 0

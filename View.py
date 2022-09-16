@@ -78,7 +78,10 @@ class View(tk.Tk):
         btn2.pack(fill='x')
 
     def printer(self):
-        print("Dziendobry")
+        list_of_tr = ""
+        for x in self.controller.model.list_of_trades:
+            list_of_tr=list_of_tr+str(x)+"\n"
+        messagebox.showinfo("showinfo", list_of_tr)
 
 
 
