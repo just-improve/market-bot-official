@@ -2,26 +2,27 @@ from Bot import Bot_class
 
 #model to czyste dane
 class Model:
-    def __init__(self, view):
+    def __init__(self):
         self.value = ''
-        self.view = view
+        self.market_name=""
+        self.gap_reverse_long = 0.0
+        self.gap_reverse_short = 0.0
+        self.gap_profit_long = 0.0
+        self.gap_profit_short = 0.0
+        self.refresh_time = 0
+        self.fee = 0.0
+        self.starting_date = 0
+        self.list_of_trades=[]
 
-    def calculate(self):
-        print("in model calculate " )
 
-    def calculate_with_argument(self, text):
-        print(text)
+    def storing_starting_settings_in_model(self, market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
+        self.market_name=str(market_name)
+        self.gap_reverse_long = float(gap_reverse_long)
+        self.gap_reverse_short = float(gap_reverse_short)
+        self.gap_profit_long = float(gap_profit_long)
+        self.gap_profit_short = float (gap_profit_short)
+        self.refresh_time = int(refresh_time)
+        self.fee = float (fee)
 
-    def creating_bot_instance(self, market_name, gap_reverse_long,gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee ):
 
-        market_name=str(market_name)
-        gap_reverse_long = float(gap_reverse_long)
-        gap_reverse_short = float(gap_reverse_short)
-        gap_profit_long = float(gap_profit_long)
-        gap_profit_short = float (gap_profit_short)
-        refresh_time = int(refresh_time)
-        fee = float (fee)
-        obj = Bot_class( market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee,self.view)
-        obj.start_bot()
-        print("in creating_bot_instance")
 

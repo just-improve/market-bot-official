@@ -6,16 +6,12 @@ from tkinter import messagebox
 
 class View(tk.Tk):
     PAD = 10
-    str10 = "hello"
 
     def __init__(self, controller):
         super().__init__()
-        self.title('Market Bot')
-
         self.controller = controller
-
+        self.title('Market Bot')
         self._make_main_frame()
-
         self._make_entry()
         self._make_button()
 
@@ -72,19 +68,17 @@ class View(tk.Tk):
 
     def _make_button(self):  # single underscore is private method
 
-        btn = ttk.Button(self.main_frm, text='start', command=self.controller.on_button_click)
+        btn = ttk.Button(self.main_frm, text='start', command=self.controller.start_bot)
         btn.pack(fill='x')
 
-        btn_stop = ttk.Button(self.main_frm, text='start', command=self.controller.on_button_click)
+        btn_stop = ttk.Button(self.main_frm, text='stop', command=self.printer)
         btn_stop.pack(fill='x')
 
-        btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.show_info_method)
+        btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.printer)
         btn2.pack(fill='x')
 
-    def _make_button_with_argument(self):  # single underscore is private method
-        btn = ttk.Button(self.main_frm, text='stop', command=lambda gap_reverse=self.gap_reverse_long_entry: self.controller.on_button_click_with_argument(gap_reverse))
-        btn.pack(fill='x')
+    def printer(self):
+        print("Dziendobry")
 
-    def show_info_method(self):
-        messagebox.showinfo("Trades", self.list_of_trades_var.get())
+
 

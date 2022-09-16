@@ -12,28 +12,16 @@ from Ftx_methods import FtxClientWJ
 
 class Bot_class:
 
-    #root = Tk()
 
-
-    #def create_entry_in_bot(self):
-
-        #b1 = Button(self.root, text="Next")
-        #b1.pack()
-        #text_result = ttk.text(self.main_frame, justify='right')
-        #text_result.insert(0, "bllll")
-        #text_result.pack()
-
-    def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view):
-        #self.controller = controller
+    def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view, controller):
+        self.controller = controller
         self.view = view
         self.dt = datetime
-        self.time_sleep=refresh_time
         self.gap_long = gap_long
         self.gap_short = gap_short
         self.gap_profit_long = gap_profit_long
         self.gap_profit_short = gap_profit_short
         self.market = market
-        self.list_of_tup_trades=[]
         self.last_closed_result=0    # jest kalkulowany bez fee
         self.total_trades_result = 0
         self.list_of_trades_results = []
@@ -46,27 +34,8 @@ class Bot_class:
         self.last_long_or_short = None
 
 
-    def print_my_variables (self):
-        print(str (self.gap_long)  + " self.gap_long")
-        print(str (self.gap_short)  + " self.gap_short")
-        print(str (self.gap_profit_long) + " self.gap_profit_long")
-        print(str (self.gap_profit_short ) + " self.gap_profit_short")
-        print(str (self.market ) + " self.market")
-        print(str (self.market ) + " self.market")
-        print(str (self.list_of_tup_trades) + " self.list_of_tup_trades"  )
-        print(str (self.last_closed_result) + " self.last_result")
-        print(str (self.list_of_trades_results ) + " self.list_of_trades_results " )
-        print(str (self.list_of_trades_total_running_results) + " self.list_of_trades_total_running_results"  )
-        print(str (self.fee) + " self.fee=fee" )
-        print(str (self.sum_of_fees) + " self.sum_of_fees" )
-        print(str (self.total_trades_result) +" self.total_trades_result" )
-        print(str (self.total_result) + " self.total_result" )
-        print(str (self.running_result) + " self.running_result " )
-
-
-
     def __del__(self):
-        Bot_class.print_my_variables(self)
+        print("")
 
     @submit_to_pool_executor(thread_pool_executor)
     def start_bot(self):
@@ -91,24 +60,13 @@ class Bot_class:
         short_profit_status = False
         initialize_while = True
 
-        trade = ()
-
-        print(type(self.list_of_tup_trades))
-        print(long_price_will)
-        print(short_price_will)
-        print(str(first_price) + " first_price  ")
-
         # pętla inicjalizująca w celu wszedł w jakąś pozycję
         while initialize_while:
             print("\n petla inicializująca   ")
             #self.view.gap_reverse_short_entry.insert(0,"dashjkdshs")
-            time.sleep(self.time_sleep)
+            time.sleep(self.controller.model.refresh_time)
             bid_last = obj_ftx_methods.get_future(self.market)["bid"]
             ask_last = obj_ftx_methods.get_future(self.market)["ask"]
-            print(str(ask_last) + " ask_last  ")
-            print(str(bid_last) + " bid_last  ")
-            print(str(long_price_will) + " long_price_will")
-            print(str(short_price_will)+ " short_price_will")
             self.view.running_result_var.set(str(self.running_result) + " running result init")
             self.view.total_result_var.set(str(self.total_result) + " total result")
             if ask_last >= long_price_will:
@@ -123,39 +81,23 @@ class Bot_class:
 
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "long"
-                self.list_of_tup_trades.append(trade)
-                print(self.list_of_tup_trades)
+                self.controller.model.list_of_trades.append(trade)
                 long_price_will = 0
                 short_profit_price_will = 0
                 long_profit_price_will = ask_last * self.gap_profit_long
                 short_price_will = ask_last * self.gap_short
 
-                self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+                self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.total_trades_result = self.total_trades_result + self.last_closed_result
-                print(str(self.last_closed_result) + " last_result")
-                print(str(self.total_trades_result) + " total_trades_result")
-
                 self.list_of_trades_results.append(self.last_closed_result)
-                print(str(self.list_of_trades_results) + " list_of_trades_results")
-
                 self.list_of_trades_total_running_results.append(self.total_trades_result)
-                print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
-
                 self.sum_of_fees = self.sum_of_fees + self.fee
-                print(str(self.sum_of_fees) + " sum_of_fees")
-
                 self.total_result=-self.sum_of_fees + self.total_trades_result
-                print(str(self.total_result) + " total_result")
-
-                #self.create_entry_in_bot()
-
 
             elif bid_last <= short_price_will:
                 initialize_while = False
                 short_status = True
                 main_while = True
-                print(ask_last)
-                print(bid_last)
                 print("short entry initialize")
 
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
@@ -163,30 +105,24 @@ class Bot_class:
                 #trade = ("short", ask_last)
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "short"
-                self.list_of_tup_trades.append(trade)
-                print(self.list_of_tup_trades)
+                self.controller.model.list_of_trades.append(trade)
+
                 long_price_will = bid_last * self.gap_long
                 short_profit_price_will = bid_last * self.gap_profit_short
                 long_profit_price_will = 0
                 short_price_will = 0
 
 
-                self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+                self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.total_trades_result = self.total_trades_result + self.last_closed_result
-                print(str(self.last_closed_result) + " last_result")
-                print(str(self.total_trades_result) + " total_trades_result")
 
                 self.list_of_trades_results.append(self.last_closed_result)
-                print(str(self.list_of_trades_results) + " list_of_trades_results")
 
                 self.list_of_trades_total_running_results.append(self.total_trades_result)
-                print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
 
                 self.sum_of_fees = self.sum_of_fees + self.fee
-                print(str(self.sum_of_fees) + " sum_of_fees")
 
                 self.total_result = -self.sum_of_fees + self.total_trades_result
-                print(str(self.total_result) + " total_result")
                 #self.create_entry_in_bot()
 
 
@@ -195,23 +131,13 @@ class Bot_class:
 
             while long_status:
                 print("\nLong status and now pause 2sec")
-                time.sleep(self.time_sleep)
+                time.sleep(self.controller.model.refresh_time)
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
-                self.view.running_result_var.set(str(self.running_result) + " running result in long")
-                self.view.total_result_var.set(str(self.total_result) + " total result")
-                self.view.list_of_trades_var.set(str(self.list_of_tup_trades))
-
-                print(str(self.running_result)+" self.running_result")
-                print(str(self.total_result) + " total_result")
-
-                print(ask_last)
-                print(bid_last)
-                print(str(long_profit_price_will) + " long_profit_price_will w longStatus")
-                print(str(short_price_will) + " short_price_will w longStatus")
+                self.view.running_result_var.set(str(self.controller.model.refresh_time) + " running result in long")
+                self.view.total_result_var.set(str(self.controller.model.list_of_trades) + " total result")
 
                 if bid_last <= short_price_will:
                     long_status = False
@@ -228,26 +154,20 @@ class Bot_class:
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
 
-                    self.list_of_tup_trades.append(trade)
-                    print("W Long statusu do shortStatus")
-                    print(self.list_of_tup_trades)
+                    self.controller.model.list_of_trades.append(trade)
 
-                    self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+                    print("W Long status do shortStatus")
+
+                    self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.total_trades_result = self.total_trades_result + self.last_closed_result
-                    print(str(self.last_closed_result) + " last_result")
-                    print(str(self.total_trades_result) + " total_trades_result")
 
                     self.list_of_trades_results.append(self.last_closed_result)
-                    print(str(self.list_of_trades_results) + " list_of_trades_results")
 
                     self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
 
                     self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    print(str(self.sum_of_fees) + " sum_of_fees")
 
                     self.total_result = -self.sum_of_fees + self.total_trades_result
-                    print(str(self.total_result) + " total_result")
 
 
                 elif ask_last >= long_profit_price_will:
@@ -264,23 +184,13 @@ class Bot_class:
 
             while short_status:
                 print("\nShort status and now pause 2sec")
-                time.sleep(self.time_sleep)
+                time.sleep(self.controller.model.refresh_time)
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in short")
-                self.view.total_result_var.set(str(self.total_result) + " total result")
-                self.view.list_of_trades_var.set(str(self.list_of_tup_trades))
-
-                print(str(self.running_result)+" self.running_result")
-                print(str(self.total_result) + " total_result")
-
-                print(ask_last)
-                print(bid_last)
-                print(str(short_profit_price_will) + " short_profit_price_will w statusieShort")
-                print(str(long_price_will) + " long_price_will w statusieShort")
+                self.view.total_result_var.set(str(self.controller.model.list_of_trades) + " total result")
 
                 if ask_last > long_price_will:
                     long_status = True
@@ -296,26 +206,16 @@ class Bot_class:
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
 
-                    self.list_of_tup_trades.append(trade)
+                    self.controller.model.list_of_trades.append(trade)
+
                     print("W shortStatus do longStatus")
-                    print(self.list_of_tup_trades)
 
-                    self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+                    self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.total_trades_result = self.total_trades_result + self.last_closed_result
-                    print(str(self.last_closed_result) + " last_result")
-                    print(str(self.total_trades_result) + " total_trades_result")
-
                     self.list_of_trades_results.append(self.last_closed_result)
-                    print(str(self.list_of_trades_results) + " list_of_trades_results")
-
                     self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
-
                     self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    print(str(self.sum_of_fees) + " sum_of_fees")
-
                     self.total_result = -self.sum_of_fees + self.total_trades_result
-                    print(str(self.total_result) + " total_result")
 
                 elif bid_last < short_profit_price_will:
                     short_profit_status = True
@@ -324,34 +224,22 @@ class Bot_class:
                     long_price_sps_will = bid_last * self.gap_long
                     print("W shortStatus do short profit status")
 
-                    # short_profit_price_will
-
-                # print(self.list_of_tup_trades[len(self.list_of_tup_trades)-1])
 
             while long_profit_status:
                 print("\nJestesmy w long profit status 2s przerwy")
-                time.sleep(self.time_sleep)
+                time.sleep(self.controller.model.refresh_time)
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 current_ask_decrease = ask_last * self.gap_short
-                print(ask_last)
-                print(bid_last)
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in long profit status")
                 self.view.total_result_var.set(str(self.total_result) + " total result")
 
 
-                print(str(self.running_result)+" self.running_result")
-                print(str(self.total_result) + " total_result")
 
-
-
-                print(str(short_price_lps_will) + " short_price_lps_will przed ")
                 if short_price_lps_will < current_ask_decrease:
                     short_price_lps_will = current_ask_decrease
-                print(str(short_price_lps_will) + " short_price_lps_will po ")
 
                 if bid_last <= short_price_lps_will:
                     print("trejd short_status z long_profit_status")
@@ -366,51 +254,34 @@ class Bot_class:
 
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
-                    self.list_of_tup_trades.append(trade)
-                    print(self.list_of_tup_trades)
+                    self.controller.model.list_of_trades.append(trade)
 
-                    self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+
+                    self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.total_trades_result = self.total_trades_result + self.last_closed_result
-                    print(str(self.last_closed_result) + " last_result")
-                    print(str(self.total_trades_result) + " total_trades_result")
 
                     self.list_of_trades_results.append(self.last_closed_result)
-                    print(str(self.list_of_trades_results) + " list_of_trades_results")
 
                     self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
 
                     self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    print(str(self.sum_of_fees) + " sum_of_fees")
 
                     self.total_result = -self.sum_of_fees + self.total_trades_result
-                    print(str(self.total_result) + " total_result")
 
             while short_profit_status:
                 print(" \nJestesmy w short profit status 2s przerwy")
-                time.sleep(self.time_sleep)
+                time.sleep(self.controller.model.refresh_time)
                 dict_future = obj_ftx_methods.get_future(self.market)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in short profit status")
                 self.view.total_result_var.set(str(self.total_result) + " total result")
 
-
-
-                print(str(self.running_result)+" self.running_result")
-                print(str(self.total_result) + " total_result")
-
-
-                print(ask_last)
-                print(bid_last)
                 current_bid_increased = bid_last * self.gap_long
 
-                print(str(long_price_sps_will) + " long_price_sps_will przed ")
                 if current_bid_increased < long_price_sps_will:
                     long_price_sps_will = current_bid_increased
-                print(str(long_price_sps_will) + " long_price_sps_will po  ")
 
                 if ask_last > long_price_sps_will:
                     long_status = True
@@ -425,25 +296,11 @@ class Bot_class:
 
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
-
                     print("W short profit go to longStatus")
-
-                    self.list_of_tup_trades.append(trade)
-                    print(self.list_of_tup_trades)
-
-                    self.last_closed_result = Test.calculate_last_result(self.list_of_tup_trades)
+                    self.controller.model.list_of_trades.append(trade)
+                    self.last_closed_result = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.total_trades_result = self.total_trades_result + self.last_closed_result
-                    print(str(self.last_closed_result) + " last_result")
-                    print(str(self.total_trades_result) + " total_trades_result")
-
                     self.list_of_trades_results.append(self.last_closed_result)
-                    print(str(self.list_of_trades_results) + " list_of_trades_results")
-
                     self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    print(str(self.list_of_trades_total_running_results) + " list_of_trades_running_results")
-
                     self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    print(str(self.sum_of_fees) + " sum_of_fees")
-
                     self.total_result = -self.sum_of_fees + self.total_trades_result
-                    print(str(self.total_result) + " total_result")
