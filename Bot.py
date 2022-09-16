@@ -110,7 +110,7 @@ class Bot_class:
             print(str(long_price_will) + " long_price_will")
             print(str(short_price_will)+ " short_price_will")
             self.view.running_result_var.set(str(self.running_result) + " running result init")
-
+            self.view.total_result_var.set(str(self.total_result) + " total result")
             if ask_last >= long_price_will:
                 initialize_while = False
                 long_status = True
@@ -202,7 +202,8 @@ class Bot_class:
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in long")
-                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+                self.view.total_result_var.set(str(self.total_result) + " total result")
+                self.view.list_of_trades_var.set(str(self.list_of_tup_trades))
 
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
@@ -270,10 +271,11 @@ class Bot_class:
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in short")
-                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+                self.view.total_result_var.set(str(self.total_result) + " total result")
+                self.view.list_of_trades_var.set(str(self.list_of_tup_trades))
+
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
-
 
                 print(ask_last)
                 print(bid_last)
@@ -338,7 +340,7 @@ class Bot_class:
                 print(bid_last)
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in long profit status")
-                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+                self.view.total_result_var.set(str(self.total_result) + " total result")
 
 
                 print(str(self.running_result)+" self.running_result")
@@ -393,7 +395,7 @@ class Bot_class:
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
                 self.view.running_result_var.set(str(self.running_result) + " running result in short profit status")
-                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+                self.view.total_result_var.set(str(self.total_result) + " total result")
 
 
 

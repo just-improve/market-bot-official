@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
+
 
 
 class View(tk.Tk):
@@ -8,7 +10,6 @@ class View(tk.Tk):
 
     def __init__(self, controller):
         super().__init__()
-
         self.title('Market Bot')
 
         self.controller = controller
@@ -17,7 +18,7 @@ class View(tk.Tk):
 
         self._make_entry()
         self._make_button()
-        self._make_button_with_argument()
+
 
 
     def main(self):
@@ -33,19 +34,19 @@ class View(tk.Tk):
         self.market_name_entry.pack(fill='x')
 
         self.gap_reverse_long_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_long_entry.insert(1,1.01)
+        self.gap_reverse_long_entry.insert(1,1.0001)
         self.gap_reverse_long_entry.pack(fill='x')
 
         self.gap_reverse_short_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_short_entry.insert(0, 0.99)
+        self.gap_reverse_short_entry.insert(0, 0.9999)
         self.gap_reverse_short_entry.pack(fill='x')
 
         self.gap_profit_long_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_profit_long_entry.insert(0,1.05)
+        self.gap_profit_long_entry.insert(0,1.001)
         self.gap_profit_long_entry.pack(fill='x')
 
         self.gap_profit_short_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_profit_short_entry.insert(0,0.95)
+        self.gap_profit_short_entry.insert(0,0.999)
         self.gap_profit_short_entry.pack(fill='x')
 
         self.refresh_time_entry = ttk.Entry(self.main_frm, justify='right')
@@ -64,12 +65,26 @@ class View(tk.Tk):
         self.label_total_result = ttk.Label(self.main_frm, textvariable=self.total_result_var)
         self.label_total_result.pack()
 
+        self.list_of_trades_var = tk.StringVar()
+        #self.label_list_of_trades = ttk.Label(self.main_frm, textvariable=self.list_of_trades_var)
+        #self.label_list_of_trades.pack()
+
+
     def _make_button(self):  # single underscore is private method
 
         btn = ttk.Button(self.main_frm, text='start', command=self.controller.on_button_click)
         btn.pack(fill='x')
 
+        btn_stop = ttk.Button(self.main_frm, text='start', command=self.controller.on_button_click)
+        btn_stop.pack(fill='x')
+
+        btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.show_info_method)
+        btn2.pack(fill='x')
+
     def _make_button_with_argument(self):  # single underscore is private method
         btn = ttk.Button(self.main_frm, text='stop', command=lambda gap_reverse=self.gap_reverse_long_entry: self.controller.on_button_click_with_argument(gap_reverse))
         btn.pack(fill='x')
+
+    def show_info_method(self):
+        messagebox.showinfo("Trades", self.list_of_trades_var.get())
 

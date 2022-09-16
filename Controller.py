@@ -18,6 +18,10 @@ class Controller:
     def on_button_click_with_argument(self, text):
         self.model.calculate_with_argument(text)
 
+    def on_button_click_stop_program(self):
+        self.view.quit()
+
+
 
 if __name__ == '__main__':
     print("if main")
