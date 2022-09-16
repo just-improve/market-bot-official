@@ -56,7 +56,13 @@ class View(tk.Tk):
         self.market_fee_entry.insert(0, 0.00064505)
         self.market_fee_entry.pack(fill='x')
 
+        self.running_result_var = tk.StringVar()
+        self.label_running_result = ttk.Label(self.main_frm, textvariable=self.running_result_var)
+        self.label_running_result.pack()
 
+        self.total_result_var = tk.StringVar()
+        self.label_total_result = ttk.Label(self.main_frm, textvariable=self.total_result_var)
+        self.label_total_result.pack()
 
     def _make_button(self):  # single underscore is private method
 

@@ -2,8 +2,9 @@ from Bot import Bot_class
 
 #model to czyste dane
 class Model:
-    def __init__(self):
+    def __init__(self, view):
         self.value = ''
+        self.view = view
 
     def calculate(self):
         print("in model calculate " )
@@ -20,7 +21,7 @@ class Model:
         gap_profit_short = float (gap_profit_short)
         refresh_time = int(refresh_time)
         fee = float (fee)
-        obj = Bot_class( market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee)
+        obj = Bot_class( market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee,self.view)
         obj.start_bot()
         print("in creating_bot_instance")
 

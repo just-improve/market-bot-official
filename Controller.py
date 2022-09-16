@@ -7,7 +7,7 @@ class Controller:
 
     def __init__(self):
         self.view = View(self)
-        self.model = Model()
+        self.model = Model(self.view)
 
     def main(self):
         self.view.main()

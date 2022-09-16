@@ -1,5 +1,6 @@
 import time
 
+from View import View
 from pool_executor import thread_pool_executor, submit_to_pool_executor
 from test import Test
 import datetime
@@ -22,8 +23,9 @@ class Bot_class:
         #text_result.insert(0, "bllll")
         #text_result.pack()
 
-    def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float ):
+    def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view):
         #self.controller = controller
+        self.view = view
         self.dt = datetime
         self.time_sleep=refresh_time
         self.gap_long = gap_long
@@ -107,6 +109,7 @@ class Bot_class:
             print(str(bid_last) + " bid_last  ")
             print(str(long_price_will) + " long_price_will")
             print(str(short_price_will)+ " short_price_will")
+            self.view.running_result_var.set(str(self.running_result) + " running result init")
 
             if ask_last >= long_price_will:
                 initialize_while = False
@@ -116,7 +119,7 @@ class Bot_class:
                 print(bid_last)
                 print("long entry initialize")
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("long", ask_last, str(str(date_time_current)))
+                trade = ("long", ask_last, str(date_time_current), self.market)
 
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "long"
@@ -156,7 +159,7 @@ class Bot_class:
                 print("short entry initialize")
 
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("short", bid_last, str(str(date_time_current)))
+                trade = ("short", bid_last, str(date_time_current), self.market)
                 #trade = ("short", ask_last)
                 self.last_entry_price=ask_last
                 self.last_long_or_short = "short"
@@ -198,6 +201,9 @@ class Bot_class:
                 bid_last = dict_future["bid"]
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
+                self.view.running_result_var.set(str(self.running_result) + " running result in long")
+                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
 
@@ -216,7 +222,7 @@ class Bot_class:
                     short_price_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", bid_last, str(str(date_time_current)))
+                    trade = ("short", bid_last, str(date_time_current), self.market)
 
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
@@ -263,6 +269,8 @@ class Bot_class:
                 bid_last = dict_future["bid"]
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
+                self.view.running_result_var.set(str(self.running_result) + " running result in short")
+                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
 
@@ -281,7 +289,7 @@ class Bot_class:
                     long_profit_price_will = ask_last * self.gap_profit_long
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", ask_last, str(date_time_current))
+                    trade = ("long", ask_last, str(date_time_current), self.market)
 
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
@@ -329,6 +337,10 @@ class Bot_class:
                 print(ask_last)
                 print(bid_last)
                 self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
+                self.view.running_result_var.set(str(self.running_result) + " running result in long profit status")
+                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+
+
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
 
@@ -348,7 +360,7 @@ class Bot_class:
                     short_price_lps_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", bid_last, str(date_time_current))
+                    trade = ("short", bid_last, str(date_time_current), self.market)
 
                     self.last_entry_price = bid_last
                     self.last_long_or_short = "short"
@@ -380,6 +392,11 @@ class Bot_class:
                 bid_last = dict_future["bid"]
                 print(str(self.list_of_tup_trades) + " self.list_of_tup_trades")
                 self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
+                self.view.running_result_var.set(str(self.running_result) + " running result in short profit status")
+                self.view.total_result_var.set(str(self.total_trades_result) +" total trades result" )
+
+
+
                 print(str(self.running_result)+" self.running_result")
                 print(str(self.total_result) + " total_result")
 
@@ -402,7 +419,7 @@ class Bot_class:
                     long_profit_price_will = ask_last * self.gap_profit_long
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", ask_last, str(date_time_current))
+                    trade = ("long", ask_last, str(date_time_current), self.market)
 
                     self.last_entry_price = ask_last
                     self.last_long_or_short = "long"
