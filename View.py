@@ -62,8 +62,8 @@ class View(tk.Tk):
         self.label_total_result.pack()
 
         self.list_of_trades_var = tk.StringVar()
-        #self.label_list_of_trades = ttk.Label(self.main_frm, textvariable=self.list_of_trades_var)
-        #self.label_list_of_trades.pack()
+        self.label_list_of_trades = ttk.Label(self.main_frm, textvariable=self.list_of_trades_var)
+        self.label_list_of_trades.pack()
 
 
     def _make_button(self):  # single underscore is private method

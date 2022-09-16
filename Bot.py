@@ -17,15 +17,6 @@ class Bot_class:
         self.controller = controller
         self.view = view
         self.dt = datetime
-        self.total_trades_result = 0
-        self.list_of_trades_results = []
-        self.list_of_trades_total_running_results = []
-        self.fee=fee
-        self.sum_of_fees=0
-        self.total_result=0
-        self.running_result = 0
-        self.last_entry_price=0
-        self.last_long_or_short = None
 
 
     def __del__(self):
@@ -61,8 +52,8 @@ class Bot_class:
             time.sleep(self.controller.model.refresh_time)
             bid_last = obj_ftx_methods.get_future(self.controller.model.market_name)["bid"]
             ask_last = obj_ftx_methods.get_future(self.controller.model.market_name)["ask"]
-            self.view.running_result_var.set(str(self.running_result) + " running result init")
-            self.view.total_result_var.set(str(self.total_result) + " total result")
+            self.view.running_result_var.set(str(self.controller.model.running_result) + " running result init")
+            self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
             if ask_last >= long_price_will:
                 initialize_while = False
                 long_status = True
@@ -73,8 +64,8 @@ class Bot_class:
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
                 trade = ("long", ask_last, str(date_time_current), self.controller.model.market_name)
 
-                self.last_entry_price=ask_last
-                self.last_long_or_short = "long"
+                self.controller.model.last_entry_price=ask_last
+                self.controller.model.last_long_or_short = "long"
                 self.controller.model.list_of_trades.append(trade)
                 long_price_will = 0
                 short_profit_price_will = 0
@@ -82,11 +73,11 @@ class Bot_class:
                 short_price_will = ask_last * self.controller.model.gap_profit_short
 
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
-                self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
-                self.list_of_trades_total_running_results.append(self.total_trades_result)
-                self.sum_of_fees = self.sum_of_fees + self.fee
-                self.total_result=-self.sum_of_fees + self.total_trades_result
+                self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
+                self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
+                self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
+                self.controller.model.total_result=-self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
             elif bid_last <= short_price_will:
                 initialize_while = False
@@ -97,8 +88,8 @@ class Bot_class:
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
                 trade = ("short", bid_last, str(date_time_current), self.controller.model.market_name)
                 #trade = ("short", ask_last)
-                self.last_entry_price=ask_last
-                self.last_long_or_short = "short"
+                self.controller.model.last_entry_price=ask_last
+                self.controller.model.last_long_or_short = "short"
                 self.controller.model.list_of_trades.append(trade)
 
                 long_price_will = bid_last * self.controller.model.gap_reverse_long
@@ -108,15 +99,15 @@ class Bot_class:
 
 
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
+                self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
 
-                self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
 
-                self.list_of_trades_total_running_results.append(self.total_trades_result)
+                self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
 
-                self.sum_of_fees = self.sum_of_fees + self.fee
+                self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
 
-                self.total_result = -self.sum_of_fees + self.total_trades_result
+                self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
                 #self.create_entry_in_bot()
 
 
@@ -129,10 +120,10 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
+                self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,bid_last,self.controller.model.fee,self.controller.model.last_long_or_short)
                 self.view.running_result_var.set(str(self.controller.model.refresh_time) + " running result in long")
                 self.view.total_result_var.set(str(self.controller.model.list_of_trades) + " total result")
-
+                self.view.list_of_trades_var.set(str(ask_last))
                 if bid_last <= short_price_will:
                     long_status = False
                     short_status = True
@@ -145,23 +136,23 @@ class Bot_class:
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("short", bid_last, str(date_time_current), self.controller.model.market_name)
 
-                    self.last_entry_price = bid_last
-                    self.last_long_or_short = "short"
+                    self.controller.model.last_entry_price = bid_last
+                    self.controller.model.last_long_or_short = "short"
 
                     self.controller.model.list_of_trades.append(trade)
 
                     print("W Long status do shortStatus")
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                    self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
+                    self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
 
-                    self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                    self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
 
-                    self.list_of_trades_total_running_results.append(self.total_trades_result)
+                    self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
 
-                    self.sum_of_fees = self.sum_of_fees + self.fee*2
+                    self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
 
-                    self.total_result = -self.sum_of_fees + self.total_trades_result
+                    self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
 
                 elif ask_last >= long_profit_price_will:
@@ -182,9 +173,10 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
-                self.view.running_result_var.set(str(self.running_result) + " running result in short")
+                self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,ask_last,self.controller.model.fee,self.controller.model.last_long_or_short)
+                self.view.running_result_var.set(str(self.controller.model.running_result) + " running result in short")
                 self.view.total_result_var.set(str(self.controller.model.list_of_trades) + " total result")
+                self.view.list_of_trades_var.set(str(ask_last))
 
                 if ask_last > long_price_will:
                     long_status = True
@@ -197,19 +189,19 @@ class Bot_class:
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("long", ask_last, str(date_time_current), self.controller.model.market_name)
 
-                    self.last_entry_price = ask_last
-                    self.last_long_or_short = "long"
+                    self.controller.model.last_entry_price = ask_last
+                    self.controller.model.last_long_or_short = "long"
 
                     self.controller.model.list_of_trades.append(trade)
 
                     print("W shortStatus do longStatus")
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                    self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
-                    self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
-                    self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    self.total_result = -self.sum_of_fees + self.total_trades_result
+                    self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
+                    self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                    self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
+                    self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
+                    self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
                 elif bid_last < short_profit_price_will:
                     short_profit_status = True
@@ -226,9 +218,9 @@ class Bot_class:
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
                 current_ask_decrease = ask_last * self.controller.model.gap_profit_short
-                self.running_result = Test.calculate_running_result(self.last_entry_price,bid_last,self.fee,self.last_long_or_short)
-                self.view.running_result_var.set(str(self.running_result) + " running result in long profit status")
-                self.view.total_result_var.set(str(self.total_result) + " total result")
+                self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,bid_last,self.controller.model.fee,self.controller.model.last_long_or_short)
+                self.view.running_result_var.set(str(self.controller.model.running_result) + " running result in long profit status")
+                self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
 
 
 
@@ -246,21 +238,21 @@ class Bot_class:
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("short", bid_last, str(date_time_current), self.controller.model.market_name)
 
-                    self.last_entry_price = bid_last
-                    self.last_long_or_short = "short"
+                    self.controller.model.last_entry_price = bid_last
+                    self.controller.model.last_long_or_short = "short"
                     self.controller.model.list_of_trades.append(trade)
 
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                    self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
+                    self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
 
-                    self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                    self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
 
-                    self.list_of_trades_total_running_results.append(self.total_trades_result)
+                    self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
 
-                    self.sum_of_fees = self.sum_of_fees + self.fee*2
+                    self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
 
-                    self.total_result = -self.sum_of_fees + self.total_trades_result
+                    self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
             while short_profit_status:
                 print(" \nJestesmy w short profit status 2s przerwy")
@@ -268,9 +260,9 @@ class Bot_class:
                 dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
                 ask_last = dict_future["ask"]
                 bid_last = dict_future["bid"]
-                self.running_result = Test.calculate_running_result(self.last_entry_price,ask_last,self.fee,self.last_long_or_short)
-                self.view.running_result_var.set(str(self.running_result) + " running result in short profit status")
-                self.view.total_result_var.set(str(self.total_result) + " total result")
+                self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,ask_last,self.controller.model.fee,self.controller.model.last_long_or_short)
+                self.view.running_result_var.set(str(self.controller.model.running_result) + " running result in short profit status")
+                self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
 
                 current_bid_increased = bid_last * self.controller.model.gap_reverse_long
 
@@ -288,13 +280,13 @@ class Bot_class:
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("long", ask_last, str(date_time_current), self.controller.model.market_name)
 
-                    self.last_entry_price = ask_last
-                    self.last_long_or_short = "long"
+                    self.controller.model.last_entry_price = ask_last
+                    self.controller.model.last_long_or_short = "long"
                     print("W short profit go to longStatus")
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
-                    self.total_trades_result = self.total_trades_result + self.controller.model.last_closed_result_no_fee
-                    self.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
-                    self.list_of_trades_total_running_results.append(self.total_trades_result)
-                    self.sum_of_fees = self.sum_of_fees + self.fee*2
-                    self.total_result = -self.sum_of_fees + self.total_trades_result
+                    self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
+                    self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
+                    self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
+                    self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
+                    self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result

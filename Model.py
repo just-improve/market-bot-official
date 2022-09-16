@@ -10,11 +10,18 @@ class Model:
         self.gap_profit_long = 0.0
         self.gap_profit_short = 0.0
         self.refresh_time = 0
-        self.fee = 0.0
-
         self.starting_date = 0
         self.list_of_trades=[]
         self.last_closed_result_no_fee = 0
+        self.total_trades_result = 0
+        self.list_of_trades_results=[]
+        self.list_of_trades_total_running_results = []
+
+        self.sum_of_fees = 0
+        self.total_result = 0
+        self.running_result = 0
+        self.last_entry_price = 0
+        self.last_long_or_short = None
 
 
     def storing_starting_settings_in_model(self, market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
