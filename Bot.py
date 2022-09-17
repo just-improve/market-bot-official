@@ -12,7 +12,6 @@ from Ftx_methods import FtxClientWJ
 
 class Bot_class:
 
-
     def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view, controller):
         self.controller = controller
         self.view = view
@@ -30,8 +29,9 @@ class Bot_class:
         prc_init_short = 0.9999  # jedna dziesiąta procenta zmiany ceny    zmiana ceny o 20 $ około
         long_price_sps_will = 0
         short_price_lps_will = 0
-        long_price_will = first_price * prc_init_long
-        short_price_will = first_price * prc_init_short
+        self.controller.model.long_price_will = first_price * prc_init_long
+        self.controller.model.short_price_will = first_price * prc_init_short
+        self.view.prices_will_var.set("Prices will "+str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
         long_profit_price_will = 0
         short_profit_price_will = 0
         main_while = False
@@ -50,7 +50,7 @@ class Bot_class:
             self.view.running_result_var.set(str(self.controller.model.running_result) + " running result init")
             self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
 
-            if ask_last >= long_price_will:
+            if ask_last >= self.controller.model.long_price_will:
                 initialize_while = False
                 long_status = True
                 main_while = True
@@ -62,10 +62,13 @@ class Bot_class:
                 self.controller.model.last_entry_price=ask_last
                 self.controller.model.last_long_or_short = "long"
                 self.controller.model.list_of_trades.append(trade)
-                long_price_will = 0
+                self.controller.model.long_price_will = 0
                 short_profit_price_will = 0
                 long_profit_price_will = ask_last * self.controller.model.gap_profit_long
-                short_price_will = ask_last * self.controller.model.gap_profit_short
+                self.controller.model.short_price_will = ask_last * self.controller.model.gap_reverse_short
+                self.view.prices_will_var.set("Prices will "+
+                    str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
@@ -73,7 +76,7 @@ class Bot_class:
                 self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
                 self.controller.model.total_result=-self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
-            elif bid_last <= short_price_will:
+            elif bid_last <= self.controller.model.short_price_will:
                 initialize_while = False
                 short_status = True
                 main_while = True
@@ -83,10 +86,13 @@ class Bot_class:
                 self.controller.model.last_entry_price=ask_last
                 self.controller.model.last_long_or_short = "short"
                 self.controller.model.list_of_trades.append(trade)
-                long_price_will = bid_last * self.controller.model.gap_reverse_long
+                self.controller.model.long_price_will = bid_last * self.controller.model.gap_reverse_long
                 short_profit_price_will = bid_last * self.controller.model.gap_profit_short
                 long_profit_price_will = 0
-                short_price_will = 0
+                self.controller.model.short_price_will = 0
+                self.view.prices_will_var.set("Prices will "+
+                    str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
@@ -106,17 +112,21 @@ class Bot_class:
                 bid_last = dict_future["bid"]
                 self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,bid_last,self.controller.model.fee,self.controller.model.last_long_or_short)
                 self.view.running_result_var.set(str(self.controller.model.running_result) + " running result in long")
-                self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
-                self.view.list_of_trades_var.set(str(ask_last))
+                total_res = float("{:.5f}".format(self.controller.model.total_result))
+                self.view.total_result_var.set(str(total_res) + " total result")
+                self.view.list_of_trades_var.set("bid ask "+ str(bid_last)+ " "+ str(ask_last))
 
-                if bid_last <= short_price_will:
+                if bid_last <= self.controller.model.short_price_will:
                     long_status = False
                     short_status = True
                     print("trejd short_status z long_status ")
-                    long_price_will = ask_last * self.controller.model.gap_reverse_long
+                    self.controller.model.long_price_will = ask_last * self.controller.model.gap_reverse_long
                     short_profit_price_will = bid_last * self.controller.model.gap_profit_short
                     long_profit_price_will = 0
-                    short_price_will = 0
+                    self.controller.model.short_price_will = 0
+                    self.view.prices_will_var.set("Prices will "+
+                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("short", bid_last, str(date_time_current), self.controller.model.market_name)
                     self.controller.model.last_entry_price = bid_last
@@ -135,8 +145,10 @@ class Bot_class:
                     long_status = False
                     print("trejd long_profit_status z long_status")
                     long_profit_price_will = 0
-                    long_price_will = 0
-                    short_price_will = ask_last * self.controller.model.gap_profit_short
+                    self.controller.model.long_price_will = 0
+                    self.controller.model.short_price_will = ask_last * self.controller.model.gap_profit_short
+                    self.view.prices_will_var.set("Prices will "+
+                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     short_price_lps_will = ask_last * self.controller.model.gap_profit_short
                     print("W LongStatus do LongProfitStatus ")
 
@@ -148,15 +160,18 @@ class Bot_class:
                 bid_last = dict_future["bid"]
                 self.controller.model.running_result = Test.calculate_running_result(self.controller.model.last_entry_price,ask_last,self.controller.model.fee,self.controller.model.last_long_or_short)
                 self.view.running_result_var.set(str(self.controller.model.running_result) + " running result in short")
-                self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
-                self.view.list_of_trades_var.set(str(ask_last))
+                total_res = float("{:.5f}".format(self.controller.model.total_result))
+                self.view.total_result_var.set(str(total_res) + " total result")
+                self.view.list_of_trades_var.set("bid ask "+ str(bid_last)+ " "+ str(ask_last))
 
-                if ask_last > long_price_will:
+                if ask_last > self.controller.model.long_price_will:
                     long_status = True
                     short_status = False
                     print("trejd long_status z short_status")
                     short_profit_price_will = 0
-                    short_price_will = bid_last * self.controller.model.gap_profit_short
+                    self.controller.model.short_price_will = bid_last * self.controller.model.gap_profit_short
+                    self.view.prices_will_var.set("Prices will "+
+                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     long_profit_price_will = ask_last * self.controller.model.gap_profit_short
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("long", ask_last, str(date_time_current), self.controller.model.market_name)
@@ -196,7 +211,9 @@ class Bot_class:
                     print("trejd short_status z long_profit_status")
                     short_status = True
                     long_profit_status = False
-                    long_price_will = ask_last * self.controller.model.gap_reverse_long
+                    self.controller.model.long_price_will = ask_last * self.controller.model.gap_reverse_long
+                    self.view.prices_will_var.set("Prices will "+
+                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     short_profit_price_will = bid_last * self.controller.model.gap_profit_short
                     short_price_lps_will = 0
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
@@ -227,7 +244,9 @@ class Bot_class:
                     long_status = True
                     short_profit_status = False
                     print("trejd long_status z  short_profit_status")
-                    short_price_will = ask_last * self.controller.model.gap_profit_short
+                    self.controller.model.short_price_will = ask_last * self.controller.model.gap_profit_short
+                    self.view.prices_will_var.set("Prices will "+
+                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     long_profit_price_will = ask_last * self.controller.model.gap_profit_long
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ("long", ask_last, str(date_time_current), self.controller.model.market_name)

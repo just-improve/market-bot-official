@@ -15,6 +15,9 @@ class Model:
         self.running_result = 0
         self.last_entry_price = 0
         self.last_long_or_short = None
+        self.long_price_will = 0
+        self.short_price_will = 0
+
 
 
     def storing_starting_settings_in_model(self, market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
