@@ -17,6 +17,11 @@ class Model:
         self.last_long_or_short = None
         self.long_price_will = 0
         self.short_price_will = 0
+        self.start_time = 0
+        self.end_time = 0
+        self.last_trade = 0
+        self.last_ask_price = 0
+        self.last_bid_price = 0
 
 
 

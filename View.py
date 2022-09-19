@@ -16,7 +16,6 @@ class View(tk.Tk):
         self._make_button()
 
 
-
     def main(self):
         self.mainloop()
 
@@ -75,16 +74,24 @@ class View(tk.Tk):
         btn = ttk.Button(self.main_frm, text='start', command=self.controller.start_bot)
         btn.pack(fill='x')
 
-        btn_stop = ttk.Button(self.main_frm, text='stop', command=self.printer)
+        btn_stop = ttk.Button(self.main_frm, text='stop', command=self.store_trades_and_finish)
         btn_stop.pack(fill='x')
 
-        btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.printer)
+        btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.show_trades)
         btn2.pack(fill='x')
 
-    def printer(self):
-        list_of_tr = ""
-        for x in self.controller.model.list_of_trades:
-            list_of_tr=list_of_tr+str(x)+"\n"
+    def store_trades_and_finish(self):
+        #self.controller.on_button_click_stop_program_and_save()
+        #self.controller.model.end_time =
+        self.controller.on_button_click_stop_program_and_save_txt()
+
+
+
+    def show_trades(self):
+        list_of_tr = self.controller.list_as_string_in_new_line(self.controller.model.list_of_trades)
+        #list_of_tr = ""
+        #for x in self.controller.model.list_of_trades:
+            #list_of_tr=list_of_tr+str(x)+"\n"
         messagebox.showinfo("showinfo", list_of_tr)
 
 

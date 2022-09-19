@@ -1,3 +1,5 @@
+import csv
+import pandas as pd
 from Bot import Bot_class
 from Model import Model
 from View import View
@@ -18,8 +20,45 @@ class Controller:
                         self.model.gap_profit_short, self.model.refresh_time, self.model.fee, self.view, self)
         obj.start_bot()
 
-    def on_button_click_stop_program(self):
+    def on_button_click_stop_program_and_save(self):
+        keys = ['trade', 'price', 'startDate', 'startTime', 'market']
+        myvar = pd.DataFrame(keys)
+        print(myvar)
+        #file_name = self.model.market_name +" "+ self.model.gap_reverse_long +" " +self.model.gap_profit_long+".csv"
+        file_name = self.model.market_name+" "+str(self.model.gap_reverse_long)+" "+str(self.model.gap_profit_long)+".csv"
+        file = open(file_name, 'w', newline='')
+        dict_writer = csv.DictWriter(file, keys)
+        #dict_writer.writeheader()
+        dict_writer.writerows(self.model.list_of_trades)
+        file.close()
         self.view.quit()
+    def on_button_click_stop_program_and_save_txt(self):
+        df = pd.DataFrame.columns=['trejd', 'time','hour', 'market']
+        listaa= [6,7,8,9]
+        df.insert(listaa)
+
+        #df.DataFrame().insert()
+        #s.inse
+        keys = ['trade', 'price', 'startDate', 'startTime', 'market']
+        print(df)
+        lis_as_str_new_line = self.list_as_string_in_new_line(self.model.list_of_trades)
+        file_name = self.model.market_name+" "+str(self.model.total_result)+".txt"
+        file = open(file_name, 'w', newline='')
+        file.write(str(self.model.last_trade) + " last trade\n")
+        file.write(str(self.model.last_long_or_short) + " last long or short\n")
+        file.write(str(self.model.last_entry_price) + " last entry price\n")
+        file.write(str(self.model.start_time) + " start time\n")
+        file.write(str(self.model.total_result)+ " total result\n")
+        file.write(lis_as_str_new_line + "\n")
+        file.close()
+        self.view.quit()
+
+    def list_as_string_in_new_line(self, list_to_edit):
+        list_as_str_with_new_line = ""
+        for x in list_to_edit:
+            list_as_str_with_new_line = list_as_str_with_new_line + str(x) + "\n"
+        return list_as_str_with_new_line
+
 
 if __name__ == '__main__':
 
