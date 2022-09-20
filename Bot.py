@@ -59,7 +59,7 @@ class Bot_class:
                 print(self.controller.model.last_bid_price)
                 print("long entry initialize")
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.market_name)
+                trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                 self.controller.model.last_trade = trade
                 self.controller.model.last_entry_price=self.controller.model.last_ask_price
                 self.controller.model.last_long_or_short = "long"
@@ -84,7 +84,7 @@ class Bot_class:
                 main_while = True
                 print("short entry initialize")
                 date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.market_name)
+                trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                 self.controller.model.last_trade = trade
                 self.controller.model.last_entry_price=self.controller.model.last_ask_price
                 self.controller.model.last_long_or_short = "short"
@@ -131,7 +131,7 @@ class Bot_class:
                         str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.market_name)
+                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                     self.controller.model.last_trade = trade
                     self.controller.model.last_entry_price = self.controller.model.last_bid_price
                     self.controller.model.last_long_or_short = "short"
@@ -178,7 +178,7 @@ class Bot_class:
                         str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.market_name)
+                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                     self.controller.model.last_trade = trade
                     self.controller.model.last_entry_price = self.controller.model.last_ask_price
                     self.controller.model.last_long_or_short = "long"
@@ -222,7 +222,7 @@ class Bot_class:
                     short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
                     short_price_lps_will = 0
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.market_name)
+                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                     self.controller.model.last_trade = trade
 
                     self.controller.model.last_entry_price = self.controller.model.last_bid_price
@@ -256,7 +256,7 @@ class Bot_class:
                         str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.market_name)
+                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
                     self.controller.model.last_trade = trade
                     self.controller.model.last_entry_price = self.controller.model.last_ask_price
                     self.controller.model.last_long_or_short = "long"

@@ -32,15 +32,33 @@ class Controller:
         dict_writer.writerows(self.model.list_of_trades)
         file.close()
         self.view.quit()
-    def on_button_click_stop_program_and_save_txt(self):
-        df = pd.DataFrame.columns=['trejd', 'time','hour', 'market']
-        listaa= [6,7,8,9]
-        df.insert(listaa)
+    def write_list_to_panda_frame(self, list_my):
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult', 'market'])
 
-        #df.DataFrame().insert()
-        #s.inse
-        keys = ['trade', 'price', 'startDate', 'startTime', 'market']
+        counter=0
+        for x in list_my:
+            df.loc[counter]=x
+            counter+=1
+
+        return df
+
+    def on_button_click_stop_program_save_to_csv(self):
+        #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
+        date_start_time = str(self.model.start_time)
+        date_end_time = str(self.model.end_time)
+        both_dates = date_start_time+" "+date_end_time
+        both_dates = both_dates.replace('/','.')
+        both_dates = both_dates.replace('-','.')
+        both_dates = both_dates.replace(':','.')
+
+
+
+        df=self.write_list_to_panda_frame(self.model.list_of_trades)
+        df.to_csv(self.model.market_name + " "+both_dates,index=True)
         print(df)
+        self.view.quit()
+
+    def on_button_click_stop_program_and_save_txt(self):
         lis_as_str_new_line = self.list_as_string_in_new_line(self.model.list_of_trades)
         file_name = self.model.market_name+" "+str(self.model.total_result)+".txt"
         file = open(file_name, 'w', newline='')
@@ -52,6 +70,7 @@ class Controller:
         file.write(lis_as_str_new_line + "\n")
         file.close()
         self.view.quit()
+
 
     def list_as_string_in_new_line(self, list_to_edit):
         list_as_str_with_new_line = ""
