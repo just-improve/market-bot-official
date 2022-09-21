@@ -28,6 +28,14 @@ class View(tk.Tk):
         self.market_name_entry.insert(1, "CEL-PERP")
         self.market_name_entry.pack(fill='x')
 
+        self.gap_reverse_long_init = ttk.Entry(self.main_frm, justify='right')
+        self.gap_reverse_long_init.insert(1, 1.0002)
+        self.gap_reverse_long_init.pack(fill='x')
+
+        self.gap_reverse_short_init = ttk.Entry(self.main_frm, justify='right')
+        self.gap_reverse_short_init.insert(1, 1.0002)
+        self.gap_reverse_short_init.pack(fill='x')
+
         self.gap_reverse_long_entry = ttk.Entry(self.main_frm, justify='right')
         self.gap_reverse_long_entry.insert(1,1.0001)
         self.gap_reverse_long_entry.pack(fill='x')

@@ -30,8 +30,8 @@ class Bot_class:
         prc_init_short = 0.9999  # jedna dziesiąta procenta zmiany ceny    zmiana ceny o 20 $ około
         long_price_sps_will = 0
         short_price_lps_will = 0
-        self.controller.model.long_price_will = first_price * prc_init_long
-        self.controller.model.short_price_will = first_price * prc_init_short
+        self.controller.model.long_price_will = first_price * self.controller.model.gap_reverse_long_init
+        self.controller.model.short_price_will = first_price * self.controller.model.gap_reverse_short_init
         self.view.prices_will_var.set("Prices will "+str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
         long_profit_price_will = 0
         short_profit_price_will = 0
@@ -80,7 +80,7 @@ class Bot_class:
                 self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
                 self.controller.model.total_result=-self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
-                trade.append(self.controller.model.last_closed_result_no_fee)
+                trade.append(self.controller.model.list_of_settings_as_str)
                 trade.append(self.controller.model.total_result)
                 trade.append(self.controller.model.previous_entry_price)
                 trade.append(self.controller.model.last_entry_price)
@@ -115,7 +115,7 @@ class Bot_class:
                 self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
                 self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
-                trade.append(self.controller.model.last_closed_result_no_fee)
+                trade.append(self.controller.model.list_of_settings_as_str)
                 trade.append(self.controller.model.total_result)
                 trade.append(self.controller.model.previous_entry_price)
                 trade.append(self.controller.model.last_entry_price)

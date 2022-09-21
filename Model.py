@@ -24,10 +24,12 @@ class Model:
         self.last_ask_price = 0
         self.last_bid_price = 0
 
-
-
-    def storing_starting_settings_in_model(self, market_name, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
+    def storing_starting_settings_in_model(self, market_name,gap_reverse_long_init,gap_reverse_short_init, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
         self.market_name=str(market_name)
+
+        self.gap_reverse_long_init = float(gap_reverse_long_init)
+        self.gap_reverse_short_init = float(gap_reverse_short_init)
+
         self.gap_reverse_long = float(gap_reverse_long)
         self.gap_reverse_short = float(gap_reverse_short)
         self.gap_profit_long = float(gap_profit_long)
@@ -35,6 +37,6 @@ class Model:
         self.refresh_time = int(refresh_time)
         self.fee = float (fee)
         self.list_of_settings = [self.market_name,self.gap_reverse_long, self.gap_reverse_short, self.gap_profit_long, self.gap_profit_short, self.refresh_time, self.fee ]
-        self.list_of_settings_as_str = self.market_name+" "+str(self.gap_reverse_long)+" "+ str(self.gap_reverse_short)+" "+ str(self.gap_profit_long)+" "+ str(self.gap_profit_short)+" "+ str(self.refresh_time)+" "+ str(self.fee)
+        self.list_of_settings_as_str = self.market_name+" grli " +str(self.gap_reverse_long_init)+" grsi "+ str(self.gap_reverse_short_init) + " grl "+str(self.gap_reverse_long)+" grs "+ str(self.gap_reverse_short)+" gpl "+ str(self.gap_profit_long)+" gps "+ str(self.gap_profit_short)+" ref_time "+ str(self.refresh_time)+" fee "+ str(self.fee)
 
 
