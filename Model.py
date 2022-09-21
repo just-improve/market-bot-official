@@ -14,6 +14,7 @@ class Model:
         self.total_result = 0
         self.running_result = 0
         self.last_entry_price = 0
+        self.previous_entry_price = 0
         self.last_long_or_short = None
         self.long_price_will = 0
         self.short_price_will = 0

@@ -48,7 +48,17 @@ class Test:
             previous_trade = x
         return last_result
 
-    #list_of_trades[]
+    @staticmethod
+    def calculate_last_result_2(previuos_entry_price, last_entry_price, long_or_short):
+        result = 0.0
+        if (long_or_short == "long" and previuos_entry_price!=0):
+            result=1-(last_entry_price/previuos_entry_price)
+        elif (long_or_short == "short" and previuos_entry_price!=0):
+            result=1-(previuos_entry_price/last_entry_price)
+
+        print(result)
+        return result
+
 
     @staticmethod
     def calculate_running_result (entry_price,last_price, fee:float, long_or_short:str):

@@ -42,7 +42,7 @@ class Controller:
         both_dates = both_dates.replace('-','.')
         both_dates = both_dates.replace(':','.')
         df=self.write_list_to_panda_frame(self.model.list_of_trades)
-        df.to_csv(self.model.market_name + " "+both_dates,index=True)
+        df.to_csv(self.model.market_name + " "+both_dates+".csv",index=True)
         print(df)
         self.view.quit()
 
@@ -62,7 +62,7 @@ class Controller:
 
     #te dwie metody przeniesc do innej klasy
     def write_list_to_panda_frame(self, list_my):
-        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult', 'market'])
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market'])
 
         counter=0
         for x in list_my:

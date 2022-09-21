@@ -51,58 +51,77 @@ class Bot_class:
             self.view.running_result_var.set(str(self.controller.model.running_result) + " running result init")
             self.view.total_result_var.set(str(self.controller.model.total_result) + " total result")
 
+            #trejdd initialize long
             if self.controller.model.last_ask_price >= self.controller.model.long_price_will:
                 initialize_while = False
                 long_status = True
                 main_while = True
-                print(self.controller.model.last_ask_price)
-                print(self.controller.model.last_bid_price)
-                print("long entry initialize")
-                date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                self.controller.model.last_trade = trade
+
+                self.controller.model.previous_entry_price = self.controller.model.last_entry_price
                 self.controller.model.last_entry_price=self.controller.model.last_ask_price
                 self.controller.model.last_long_or_short = "long"
-                self.controller.model.list_of_trades.append(trade)
-                self.controller.model.long_price_will = 0
-                short_profit_price_will = 0
-                long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
-                self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
-                self.view.prices_will_var.set("Prices will "+
-                    str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
 
-                self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+                self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
+                self.controller.model.long_price_will = 0
+                self.view.prices_will_var.set("Prices will " + str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
+                long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                short_profit_price_will = 0
+
+                date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+
+                self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price,self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
+                #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                 self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                 self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
                 self.controller.model.total_result=-self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
+                trade.append(self.controller.model.last_closed_result_no_fee)
+                trade.append(self.controller.model.total_result)
+                trade.append(self.controller.model.previous_entry_price)
+                trade.append(self.controller.model.last_entry_price)
+                trade.append(self.controller.model.market_name)
+                self.controller.model.list_of_trades.append(trade)
+                self.controller.model.last_trade = trade
+
+            # trejdd initialize short
             elif self.controller.model.last_bid_price <= self.controller.model.short_price_will:
                 initialize_while = False
                 short_status = True
                 main_while = True
-                print("short entry initialize")
-                date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                self.controller.model.last_trade = trade
-                self.controller.model.last_entry_price=self.controller.model.last_ask_price
+
+                self.controller.model.previous_entry_price = self.controller.model.last_entry_price
+                self.controller.model.last_entry_price=self.controller.model.last_bid_price
                 self.controller.model.last_long_or_short = "short"
-                self.controller.model.list_of_trades.append(trade)
+
                 self.controller.model.long_price_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                self.controller.model.short_price_will = 0
+                self.view.prices_will_var.set("Prices will "+str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
                 short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
                 long_profit_price_will = 0
-                self.controller.model.short_price_will = 0
-                self.view.prices_will_var.set("Prices will "+
-                    str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
 
-                self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+                date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+
+                self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,                    self.controller.model.last_long_or_short)
+                #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                 self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                 self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee
                 self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
 
+                trade.append(self.controller.model.last_closed_result_no_fee)
+                trade.append(self.controller.model.total_result)
+                trade.append(self.controller.model.previous_entry_price)
+                trade.append(self.controller.model.last_entry_price)
+                trade.append(self.controller.model.market_name)
+                self.controller.model.list_of_trades.append(trade)
+                self.controller.model.last_trade = trade
 
         while main_while:
             time.sleep(0.1)
@@ -119,30 +138,40 @@ class Bot_class:
                 self.view.total_result_var.set(str(total_res) + " total result")
                 self.view.list_of_trades_var.set("bid ask "+ str(self.controller.model.last_bid_price)+ " "+ str(self.controller.model.last_ask_price))
 
+                # trejdd short
                 if self.controller.model.last_bid_price <= self.controller.model.short_price_will:
                     long_status = False
                     short_status = True
-                    print("trejd short_status z long_status ")
-                    self.controller.model.long_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_long
-                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
-                    long_profit_price_will = 0
-                    self.controller.model.short_price_will = 0
-                    self.view.prices_will_var.set("Prices will "+
-                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
 
-                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                    self.controller.model.last_trade = trade
+                    self.controller.model.previous_entry_price = self.controller.model.last_entry_price
                     self.controller.model.last_entry_price = self.controller.model.last_bid_price
                     self.controller.model.last_long_or_short = "short"
-                    self.controller.model.list_of_trades.append(trade)
-                    print("W Long status do shortStatus")
-                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+
+                    self.controller.model.long_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_long
+                    self.controller.model.short_price_will = 0
+                    self.view.prices_will_var.set("Prices will "+str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
+                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                    long_profit_price_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+
+                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
+                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                     self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
                     self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
+
+                    trade.append(self.controller.model.last_closed_result_no_fee)
+                    trade.append(self.controller.model.total_result)
+                    trade.append(self.controller.model.previous_entry_price)
+                    trade.append(self.controller.model.last_entry_price)
+                    trade.append(self.controller.model.market_name)
+                    self.controller.model.list_of_trades.append(trade)
+                    self.controller.model.last_trade = trade
 
                 elif self.controller.model.last_ask_price >= long_profit_price_will:
                     long_profit_status = True
@@ -152,7 +181,7 @@ class Bot_class:
                     self.controller.model.long_price_will = 0
                     self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
                     self.view.prices_will_var.set("Prices will "+
-                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+                                                  str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
                     short_price_lps_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
                     print("W LongStatus do LongProfitStatus ")
 
@@ -168,28 +197,39 @@ class Bot_class:
                 self.view.total_result_var.set(str(total_res) + " total result")
                 self.view.list_of_trades_var.set("bid ask "+ str(self.controller.model.last_bid_price)+ " "+ str(self.controller.model.last_ask_price))
 
+                # trejdd long
                 if self.controller.model.last_ask_price > self.controller.model.long_price_will:
                     long_status = True
                     short_status = False
-                    print("trejd long_status z short_status")
-                    short_profit_price_will = 0
-                    self.controller.model.short_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
-                    self.view.prices_will_var.set("Prices will "+
-                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
-                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
-                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                    self.controller.model.last_trade = trade
+
+                    self.controller.model.previous_entry_price = self.controller.model.last_entry_price
                     self.controller.model.last_entry_price = self.controller.model.last_ask_price
                     self.controller.model.last_long_or_short = "long"
-                    self.controller.model.list_of_trades.append(trade)
-                    print("W shortStatus do longStatus")
-                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+
+                    self.controller.model.short_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                    self.view.prices_will_var.set("Prices will "+ str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
+                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
+                    short_profit_price_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+
+                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
+                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                     self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
                     self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
+
+                    trade.append(self.controller.model.last_closed_result_no_fee)
+                    trade.append(self.controller.model.total_result)
+                    trade.append(self.controller.model.previous_entry_price)
+                    trade.append(self.controller.model.last_entry_price)
+                    trade.append(self.controller.model.market_name)
+                    self.controller.model.list_of_trades.append(trade)
+                    self.controller.model.last_trade = trade
 
                 elif self.controller.model.last_bid_price < short_profit_price_will:
                     short_profit_status = True
@@ -212,28 +252,40 @@ class Bot_class:
 
                 if short_price_lps_will < current_ask_decrease:
                     short_price_lps_will = current_ask_decrease
+
+                # trejdd short
                 if self.controller.model.last_bid_price <= short_price_lps_will:
-                    print("trejd short_status z long_profit_status")
                     short_status = True
                     long_profit_status = False
-                    self.controller.model.long_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_long
-                    self.view.prices_will_var.set("Prices will "+
-                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
-                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
-                    short_price_lps_will = 0
-                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("short", self.controller.model.last_bid_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                    self.controller.model.last_trade = trade
 
+                    self.controller.model.previous_entry_price = self.controller.model.last_entry_price
                     self.controller.model.last_entry_price = self.controller.model.last_bid_price
                     self.controller.model.last_long_or_short = "short"
-                    self.controller.model.list_of_trades.append(trade)
-                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+
+                    self.controller.model.long_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_long
+                    self.view.prices_will_var.set("Prices will "+ str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
+                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                    short_price_lps_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+
+                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
+                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                     self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
                     self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
+
+                    trade.append(self.controller.model.last_closed_result_no_fee)
+                    trade.append(self.controller.model.total_result)
+                    trade.append(self.controller.model.previous_entry_price)
+                    trade.append(self.controller.model.last_entry_price)
+                    trade.append(self.controller.model.market_name)
+                    self.controller.model.list_of_trades.append(trade)
+                    self.controller.model.last_trade = trade
 
             while short_profit_status:
                 print(" \nJestesmy w short profit status 2s przerwy")
@@ -247,24 +299,40 @@ class Bot_class:
                 current_bid_increased = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
                 if current_bid_increased < long_price_sps_will:
                     long_price_sps_will = current_bid_increased
+
+                # trejdd long
                 if self.controller.model.last_ask_price > long_price_sps_will:
                     long_status = True
                     short_profit_status = False
-                    print("trejd long_status z  short_profit_status")
-                    self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
-                    self.view.prices_will_var.set("Prices will "+
-                        str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
-                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
-                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ("long", self.controller.model.last_ask_price, str(date_time_current), self.controller.model.last_closed_result_no_fee, self.controller.model.total_result, self.controller.model.market_name)
-                    self.controller.model.last_trade = trade
+
+                    self.controller.model.previous_entry_price = self.controller.model.last_entry_price
                     self.controller.model.last_entry_price = self.controller.model.last_ask_price
                     self.controller.model.last_long_or_short = "long"
-                    print("W short profit go to longStatus")
-                    self.controller.model.list_of_trades.append(trade)
-                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
+
+                    self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
+                    self.view.prices_will_var.set("Prices will "+ str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
+
+                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                    long_price_sps_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                    #'trade', 'price', 'startDate and time', 'lastTradeResult', 'totalResult','previousEntry', 'lastEntry', 'market'])
+
+
+                    self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price,self.controller.model.last_entry_price, self.controller.model.last_long_or_short)
+                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
                     self.controller.model.sum_of_fees = self.controller.model.sum_of_fees + self.controller.model.fee*2
                     self.controller.model.total_result = -self.controller.model.sum_of_fees + self.controller.model.total_trades_result
+
+                    trade.append(self.controller.model.last_closed_result_no_fee)
+                    trade.append(self.controller.model.total_result)
+                    trade.append(self.controller.model.previous_entry_price)
+                    trade.append(self.controller.model.last_entry_price)
+                    trade.append(self.controller.model.market_name)
+
+                    self.controller.model.list_of_trades.append(trade)
+                    self.controller.model.last_trade = trade
