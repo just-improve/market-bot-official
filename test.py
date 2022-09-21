@@ -1,4 +1,4 @@
-
+import pandas as pd
 class Test:
 
     @staticmethod
@@ -59,6 +59,17 @@ class Test:
         print(result)
         return result
 
+
+    @staticmethod
+    def write_list_to_panda_frame_stat(list_my):
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market'])
+
+        counter=0
+        for x in list_my:
+            df.loc[counter]=x
+            counter+=1
+
+        return df
 
     @staticmethod
     def calculate_running_result (entry_price,last_price, fee:float, long_or_short:str):

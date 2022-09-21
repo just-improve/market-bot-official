@@ -41,6 +41,8 @@ class Bot_class:
         long_profit_status = False
         short_profit_status = False
         initialize_while = True
+        stop_bot_by_indicator = False
+        stop_bot_by_stop_button = False
 
         # pętla inicjalizująca w celu wszedł w jakąś pozycję
         while initialize_while:
@@ -72,7 +74,6 @@ class Bot_class:
                 trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
 
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price,self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
-                #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                 self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -108,7 +109,6 @@ class Bot_class:
                 trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
 
                 self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,                    self.controller.model.last_long_or_short)
-                #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                 self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                 self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                 self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -158,7 +158,6 @@ class Bot_class:
                     trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
-                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -216,7 +215,6 @@ class Bot_class:
                     trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
-                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -272,7 +270,6 @@ class Bot_class:
                     trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price, self.controller.model.last_entry_price,self.controller.model.last_long_or_short)
-                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -317,11 +314,9 @@ class Bot_class:
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
                     trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
-                    #'trade', 'price', 'startDate and time', 'lastTradeResult', 'totalResult','previousEntry', 'lastEntry', 'market'])
 
 
                     self.controller.model.last_closed_result_no_fee = Test.calculate_last_result_2(self.controller.model.previous_entry_price,self.controller.model.last_entry_price, self.controller.model.last_long_or_short)
-                    #self.controller.model.last_closed_result_no_fee = Test.calculate_last_result(self.controller.model.list_of_trades)
                     self.controller.model.total_trades_result = self.controller.model.total_trades_result + self.controller.model.last_closed_result_no_fee
                     self.controller.model.list_of_trades_results.append(self.controller.model.last_closed_result_no_fee)
                     self.controller.model.list_of_trades_total_running_results.append(self.controller.model.total_trades_result)
@@ -336,3 +331,7 @@ class Bot_class:
 
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
+                while stop_bot_by_stop_button:
+                    pass
+                while stop_bot_by_indicator:
+                    pass

@@ -3,6 +3,7 @@ import pandas as pd
 from Bot import Bot_class
 from Model import Model
 from View import View
+from test import Test
 
 
 class Controller:
@@ -41,7 +42,9 @@ class Controller:
         both_dates = both_dates.replace('/','.')
         both_dates = both_dates.replace('-','.')
         both_dates = both_dates.replace(':','.')
-        df=self.write_list_to_panda_frame(self.model.list_of_trades)
+        #df=self.write_list_to_panda_frame(self.model.list_of_trades)
+        df=Test.write_list_to_panda_frame_stat(self.model.list_of_trades)
+
         df.to_csv(self.model.market_name + " "+both_dates+".csv",index=True)
         print(df)
         self.view.quit()
