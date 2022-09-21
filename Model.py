@@ -33,6 +33,7 @@ class Model:
         self.gap_profit_short = float (gap_profit_short)
         self.refresh_time = int(refresh_time)
         self.fee = float (fee)
-
+        self.list_of_settings = [self.market_name,self.gap_reverse_long, self.gap_reverse_short, self.gap_profit_long, self.gap_profit_short, self.refresh_time, self.fee ]
+        self.list_of_settings_as_str = self.market_name+" "+str(self.gap_reverse_long)+" "+ str(self.gap_reverse_short)+" "+ str(self.gap_profit_long)+" "+ str(self.gap_profit_short)+" "+ str(self.refresh_time)+" "+ str(self.fee)
 
 

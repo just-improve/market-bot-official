@@ -32,15 +32,6 @@ class Controller:
         dict_writer.writerows(self.model.list_of_trades)
         file.close()
         self.view.quit()
-    def write_list_to_panda_frame(self, list_my):
-        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult', 'market'])
-
-        counter=0
-        for x in list_my:
-            df.loc[counter]=x
-            counter+=1
-
-        return df
 
     def on_button_click_stop_program_save_to_csv(self):
         #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
@@ -50,9 +41,6 @@ class Controller:
         both_dates = both_dates.replace('/','.')
         both_dates = both_dates.replace('-','.')
         both_dates = both_dates.replace(':','.')
-
-
-
         df=self.write_list_to_panda_frame(self.model.list_of_trades)
         df.to_csv(self.model.market_name + " "+both_dates,index=True)
         print(df)
@@ -71,6 +59,17 @@ class Controller:
         file.close()
         self.view.quit()
 
+
+    #te dwie metody przeniesc do innej klasy
+    def write_list_to_panda_frame(self, list_my):
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult', 'market'])
+
+        counter=0
+        for x in list_my:
+            df.loc[counter]=x
+            counter+=1
+
+        return df
 
     def list_as_string_in_new_line(self, list_to_edit):
         list_as_str_with_new_line = ""
