@@ -85,6 +85,7 @@ class Bot_class:
                 trade.append(self.controller.model.previous_entry_price)
                 trade.append(self.controller.model.last_entry_price)
                 trade.append(self.controller.model.market_name)
+                trade.append(self.controller.model.final_session_result)
                 self.controller.model.list_of_trades.append(trade)
                 self.controller.model.last_trade = trade
 
@@ -120,6 +121,7 @@ class Bot_class:
                 trade.append(self.controller.model.previous_entry_price)
                 trade.append(self.controller.model.last_entry_price)
                 trade.append(self.controller.model.market_name)
+                trade.append(self.controller.model.final_session_result)
                 self.controller.model.list_of_trades.append(trade)
                 self.controller.model.last_trade = trade
 
@@ -169,6 +171,7 @@ class Bot_class:
                     trade.append(self.controller.model.previous_entry_price)
                     trade.append(self.controller.model.last_entry_price)
                     trade.append(self.controller.model.market_name)
+                    trade.append(self.controller.model.final_session_result)
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
 
@@ -226,6 +229,8 @@ class Bot_class:
                     trade.append(self.controller.model.previous_entry_price)
                     trade.append(self.controller.model.last_entry_price)
                     trade.append(self.controller.model.market_name)
+                    trade.append(self.controller.model.final_session_result)
+
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
 
@@ -281,6 +286,8 @@ class Bot_class:
                     trade.append(self.controller.model.previous_entry_price)
                     trade.append(self.controller.model.last_entry_price)
                     trade.append(self.controller.model.market_name)
+                    trade.append(self.controller.model.final_session_result)
+
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
 
@@ -328,6 +335,8 @@ class Bot_class:
                     trade.append(self.controller.model.previous_entry_price)
                     trade.append(self.controller.model.last_entry_price)
                     trade.append(self.controller.model.market_name)
+                    trade.append(self.controller.model.final_session_result)
+
 
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
