@@ -60,7 +60,7 @@ class Controller:
         df.to_csv(self.model.market_name + " " + both_dates + ".csv", index=True)
         print(df)
 
-    def on_button_click_stop_program_save_to_csv(self):
+    def on_button_click_while_bot_stop(self):
         self.model.stop_bot_by_stop_button=True
         #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
 

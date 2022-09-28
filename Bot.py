@@ -377,4 +377,5 @@ class Bot_class:
         print(str(self.controller.model.final_session_result) + " final session result ")
         print(trade)
 
+        #zapisuje dane do csv
         self.controller.save_file_to_csv()

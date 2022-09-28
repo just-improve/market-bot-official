@@ -92,7 +92,7 @@ class View(tk.Tk):
         #self.controller.on_button_click_stop_program_and_save()
         #self.controller.model.end_time =
         #self.controller.on_button_click_stop_program_and_save_txt()
-        self.controller.on_button_click_stop_program_save_to_csv()
+        self.controller.on_button_click_while_bot_stop()
 
 
 
