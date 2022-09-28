@@ -27,6 +27,7 @@ class Model:
         self.end_time = 0
         self.last_trade = 0
 
+        self.stop_bot_by_stop_button=False
 
     def storing_starting_settings_in_model(self, market_name,gap_reverse_long_init,gap_reverse_short_init, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):
         self.market_name=str(market_name)

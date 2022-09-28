@@ -34,20 +34,6 @@ class Controller:
         file.close()
         self.view.quit()
 
-    def on_button_click_stop_program_save_to_csv(self):
-        #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
-        date_start_time = str(self.model.start_time)
-        date_end_time = str(self.model.end_time)
-        both_dates = date_start_time+" "+date_end_time
-        both_dates = both_dates.replace('/','.')
-        both_dates = both_dates.replace('-','.')
-        both_dates = both_dates.replace(':','.')
-        #df=self.write_list_to_panda_frame(self.model.list_of_trades)
-        df=Test.write_list_to_panda_frame_stat(self.model.list_of_trades)
-
-        df.to_csv(self.model.market_name + " "+both_dates+".csv",index=True)
-        print(df)
-        self.view.quit()
 
     def on_button_click_stop_program_and_save_txt(self):
         lis_as_str_new_line = self.list_as_string_in_new_line(self.model.list_of_trades)
@@ -62,10 +48,28 @@ class Controller:
         file.close()
         self.view.quit()
 
+    def save_file_to_csv(self):
+        date_start_time = str(self.model.start_time)
+        date_end_time = str(self.model.end_time)
+        both_dates = date_start_time + " " + date_end_time
+        both_dates = both_dates.replace('/', '.')
+        both_dates = both_dates.replace('-', '.')
+        both_dates = both_dates.replace(':', '.')
+        # df=self.write_list_to_panda_frame(self.model.list_of_trades)
+        df = Test.write_list_to_panda_frame_stat(self.model.list_of_trades)
+        df.to_csv(self.model.market_name + " " + both_dates + ".csv", index=True)
+        print(df)
+
+    def on_button_click_stop_program_save_to_csv(self):
+        self.model.stop_bot_by_stop_button=True
+        #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
+
+        #self.view.quit()
+
 
     #te dwie metody przeniesc do innej klasy
     def write_list_to_panda_frame(self, list_my):
-        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market'])
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market' ])
 
         counter=0
         for x in list_my:
