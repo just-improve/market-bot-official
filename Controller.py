@@ -23,12 +23,6 @@ class Controller:
 
 
     def save_file_to_csv(self):
-        date_start_time = str(self.model.start_time)
-        date_end_time = str(self.model.end_time)
-        both_dates = date_start_time + " " + date_end_time
-        both_dates = both_dates.replace('/', '.')
-        both_dates = both_dates.replace('-', '.')
-        both_dates = both_dates.replace(':', '.')
         df = Test.write_list_to_panda_frame_stat(self.model.list_of_trades)
         df.to_csv(self.model.market_name + ".csv", mode='a',index=False, header=False)
         print(df)
@@ -36,17 +30,6 @@ class Controller:
     def on_button_click_while_bot_stop(self):
         self.model.stop_bot_by_stop_button=True
 
-
-    #te dwie metody przeniesc do innej klasy
-    def write_list_to_panda_frame(self, list_my):
-        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market' ])
-
-        counter=0
-        for x in list_my:
-            df.loc[counter]=x
-            counter+=1
-
-        return df
 
     def list_as_string_in_new_line(self, list_to_edit):
         list_as_str_with_new_line = ""
