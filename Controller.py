@@ -21,32 +21,6 @@ class Controller:
                         self.model.gap_profit_short, self.model.refresh_time, self.model.fee, self.view, self)
         obj.start_bot()
 
-    def on_button_click_stop_program_and_save(self):
-        keys = ['trade', 'price', 'startDate', 'startTime', 'market']
-        myvar = pd.DataFrame(keys)
-        print(myvar)
-        #file_name = self.model.market_name +" "+ self.model.gap_reverse_long +" " +self.model.gap_profit_long+".csv"
-        file_name = self.model.market_name+" "+str(self.model.gap_reverse_long)+" "+str(self.model.gap_profit_long)+".csv"
-        file = open(file_name, 'w', newline='')
-        dict_writer = csv.DictWriter(file, keys)
-        #dict_writer.writeheader()
-        dict_writer.writerows(self.model.list_of_trades)
-        file.close()
-        self.view.quit()
-
-
-    def on_button_click_stop_program_and_save_txt(self):
-        lis_as_str_new_line = self.list_as_string_in_new_line(self.model.list_of_trades)
-        file_name = self.model.market_name+" "+str(self.model.total_result)+".txt"
-        file = open(file_name, 'w', newline='')
-        file.write(str(self.model.last_trade) + " last trade\n")
-        file.write(str(self.model.last_long_or_short) + " last long or short\n")
-        file.write(str(self.model.last_entry_price) + " last entry price\n")
-        file.write(str(self.model.start_time) + " start time\n")
-        file.write(str(self.model.total_result)+ " total result\n")
-        file.write(lis_as_str_new_line + "\n")
-        file.close()
-        self.view.quit()
 
     def save_file_to_csv(self):
         date_start_time = str(self.model.start_time)
@@ -55,16 +29,12 @@ class Controller:
         both_dates = both_dates.replace('/', '.')
         both_dates = both_dates.replace('-', '.')
         both_dates = both_dates.replace(':', '.')
-        # df=self.write_list_to_panda_frame(self.model.list_of_trades)
         df = Test.write_list_to_panda_frame_stat(self.model.list_of_trades)
-        df.to_csv(self.model.market_name + " " + both_dates + ".csv", index=True)
+        df.to_csv(self.model.market_name + ".csv", mode='a',index=False, header=False)
         print(df)
 
     def on_button_click_while_bot_stop(self):
         self.model.stop_bot_by_stop_button=True
-        #df = pd.DataFrame(columns=['trade','price', 'startDate', 'startTime', 'market'])
-
-        #self.view.quit()
 
 
     #te dwie metody przeniesc do innej klasy
