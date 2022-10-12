@@ -6,7 +6,6 @@ class Model:
         self.value = ''
         self.starting_date = 0
         self.start_time = 0
-
         self.list_of_trades=[]
         self.last_long_or_short = None
         self.last_bid_price = 0

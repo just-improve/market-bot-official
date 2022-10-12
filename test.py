@@ -62,7 +62,7 @@ class Test:
 
     @staticmethod
     def write_list_to_panda_frame_stat(list_my):
-        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult','previousEntry','lastEntry', 'market', 'finalSessionResult'])
+        df = pd.DataFrame(columns=['trade','price', 'startDate and time', 'lastTradeResult','totalResult', 'finalSessionResult'])
 
         counter=0
         for x in list_my:

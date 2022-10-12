@@ -16,6 +16,7 @@ class Controller:
         self.view.main()
 
     def start_bot(self):
+
         self.model.storing_starting_settings_in_model(self.view.market_name_entry.get(),self.view.gap_reverse_long_init.get(),self.view.gap_reverse_short_init.get(), self.view.gap_reverse_long_entry.get(), self.view.gap_reverse_short_entry.get(), self.view.gap_profit_long_entry.get(), self.view.gap_profit_short_entry.get(), self.view.refresh_time_entry.get(), self.view.market_fee_entry.get())
         obj = Bot_class(self.model.market_name, self.model.gap_reverse_long, self.model.gap_reverse_short, self.model.gap_profit_long,
                         self.model.gap_profit_short, self.model.refresh_time, self.model.fee, self.view, self)
@@ -29,7 +30,6 @@ class Controller:
 
     def on_button_click_while_bot_stop(self):
         self.model.stop_bot_by_stop_button=True
-
 
     def list_as_string_in_new_line(self, list_to_edit):
         list_as_str_with_new_line = ""

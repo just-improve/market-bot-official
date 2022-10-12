@@ -81,9 +81,6 @@ class Bot_class:
 
                 trade.append(self.controller.model.list_of_settings_as_str)
                 trade.append(self.controller.model.total_result)
-                trade.append(self.controller.model.previous_entry_price)
-                trade.append(self.controller.model.last_entry_price)
-                trade.append(self.controller.model.market_name)
                 trade.append(self.controller.model.final_session_result)
                 self.controller.model.list_of_trades.append(trade)
                 self.controller.model.last_trade = trade
@@ -117,9 +114,6 @@ class Bot_class:
 
                 trade.append(self.controller.model.list_of_settings_as_str)
                 trade.append(self.controller.model.total_result)
-                trade.append(self.controller.model.previous_entry_price)
-                trade.append(self.controller.model.last_entry_price)
-                trade.append(self.controller.model.market_name)
                 trade.append(self.controller.model.final_session_result)
                 self.controller.model.list_of_trades.append(trade)
                 self.controller.model.last_trade = trade
@@ -167,9 +161,6 @@ class Bot_class:
 
                     trade.append(self.controller.model.last_closed_result_no_fee)
                     trade.append(self.controller.model.total_result)
-                    trade.append(self.controller.model.previous_entry_price)
-                    trade.append(self.controller.model.last_entry_price)
-                    trade.append(self.controller.model.market_name)
                     trade.append(self.controller.model.final_session_result)
                     self.controller.model.list_of_trades.append(trade)
                     self.controller.model.last_trade = trade
@@ -225,9 +216,6 @@ class Bot_class:
 
                     trade.append(self.controller.model.last_closed_result_no_fee)
                     trade.append(self.controller.model.total_result)
-                    trade.append(self.controller.model.previous_entry_price)
-                    trade.append(self.controller.model.last_entry_price)
-                    trade.append(self.controller.model.market_name)
                     trade.append(self.controller.model.final_session_result)
 
                     self.controller.model.list_of_trades.append(trade)
@@ -282,9 +270,6 @@ class Bot_class:
 
                     trade.append(self.controller.model.last_closed_result_no_fee)
                     trade.append(self.controller.model.total_result)
-                    trade.append(self.controller.model.previous_entry_price)
-                    trade.append(self.controller.model.last_entry_price)
-                    trade.append(self.controller.model.market_name)
                     trade.append(self.controller.model.final_session_result)
 
                     self.controller.model.list_of_trades.append(trade)
@@ -331,9 +316,6 @@ class Bot_class:
 
                     trade.append(self.controller.model.last_closed_result_no_fee)
                     trade.append(self.controller.model.total_result)
-                    trade.append(self.controller.model.previous_entry_price)
-                    trade.append(self.controller.model.last_entry_price)
-                    trade.append(self.controller.model.market_name)
                     trade.append(self.controller.model.final_session_result)
 
 
@@ -365,9 +347,6 @@ class Bot_class:
 
         trade.append(self.controller.model.last_closed_result_no_fee)
         trade.append(self.controller.model.total_result)
-        trade.append(self.controller.model.previous_entry_price)
-        trade.append(self.controller.model.last_entry_price)
-        trade.append(self.controller.model.market_name)
         trade.append(self.controller.model.final_session_result)
 
         self.controller.model.list_of_trades.append(trade)
@@ -379,3 +358,7 @@ class Bot_class:
 
         #zapisuje dane do csv
         self.controller.save_file_to_csv()
+
+        self.controller.model.stop_bot_by_stop_button = False
+        self.controller.model.list_of_trades = []
+        self.controller.model.final_session_result=0
