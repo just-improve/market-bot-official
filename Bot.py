@@ -135,6 +135,7 @@ class Bot_class:
                     self.view.list_of_trades_var.set(str(self.controller.model.last_trade))
 
                     if self.controller.model.last_bid_price <= short_price_will:
+
                         long_status = False
                         short_status = True
 
