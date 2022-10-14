@@ -73,7 +73,7 @@ class Bot_class:
                 print(self.controller.model.market_name)
                 print(pos_or_neg)
 
-                # long
+                #happylife
                 if pos_or_neg == 1:
                     print('pos_or_neg' + " pierwszy long ")
                     long_status = True
@@ -91,7 +91,8 @@ class Bot_class:
                     short_price_lps_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                    trade = [self.controller.model.market_name,"long", self.controller.model.last_ask_price, str(date_time_current)]
+                    self.controller.model.last_trade = trade
                     self.controller.model.list_of_trades.append(trade)
 
                 #short
@@ -111,7 +112,8 @@ class Bot_class:
                     short_price_lps_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                    trade = [self.controller.model.market_name,"short", self.controller.model.last_bid_price, str(date_time_current)]
+                    self.controller.model.last_trade = trade
                     self.controller.model.list_of_trades.append(trade)
 
             while isVolatility is True:
@@ -128,6 +130,9 @@ class Bot_class:
                     long_price_sps_will = 0
                     short_price_lps_will = 0
 
+                    self.view.running_result_var.set(str(short_price_will )+ " short_price_will"  )
+                    self.view.total_result_var.set(str(long_profit_price_will) + " long_profit_price_will")
+                    self.view.list_of_trades_var.set(str(self.controller.model.last_trade))
 
                     if self.controller.model.last_bid_price <= short_price_will:
                         long_status = False
@@ -141,7 +146,8 @@ class Bot_class:
                         short_price_lps_will = 0
 
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                        trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                        trade = [self.controller.model.market_name,"short", self.controller.model.last_bid_price, str(date_time_current)]
+                        self.controller.model.last_trade = trade
                         self.controller.model.list_of_trades.append(trade)
 
                     elif self.controller.model.last_ask_price >= long_profit_price_will:
@@ -156,6 +162,7 @@ class Bot_class:
                         short_price_lps_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
 
                 while short_status:
+                    print("short_status")
                     time.sleep(self.controller.model.refresh_time)
                     dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
                     self.controller.model.last_ask_price = dict_future["ask"]
@@ -168,6 +175,11 @@ class Bot_class:
                     long_price_sps_will = 0
                     short_price_lps_will = 0
 
+                    self.view.running_result_var.set(str(long_price_will )+ " long_price_will"  )
+                    self.view.total_result_var.set(str(short_profit_price_will) + " short_profit_price_will")
+                    self.view.list_of_trades_var.set(str(self.controller.model.last_trade))
+
+                    #happylife
                     if self.controller.model.last_ask_price > long_price_will:
                         long_status = True
                         short_status = False
@@ -180,7 +192,8 @@ class Bot_class:
                         short_price_lps_will = 0
 
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                        trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                        trade = [self.controller.model.market_name,"long", self.controller.model.last_ask_price, str(date_time_current)]
+                        self.controller.model.last_trade = trade
                         self.controller.model.list_of_trades.append(trade)
 
                     elif self.controller.model.last_bid_price < short_profit_price_will:
@@ -218,7 +231,8 @@ class Bot_class:
                         short_price_lps_will = 0
 
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                        trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                        trade = [self.controller.model.market_name,"short", self.controller.model.last_bid_price, str(date_time_current)]
+                        self.controller.model.last_trade = trade
                         self.controller.model.list_of_trades.append(trade)
 
                 while short_profit_status:
@@ -245,7 +259,8 @@ class Bot_class:
                         short_price_lps_will = 0
 
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                        trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                        trade = [self.controller.model.market_name,"long", self.controller.model.last_ask_price, str(date_time_current)]
+                        self.controller.model.last_trade = trade
                         self.controller.model.list_of_trades.append(trade)
 
             while isVolatility is False:
