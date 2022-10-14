@@ -3,18 +3,21 @@ from Bot import Bot_class
 #model to czyste dane
 class Model:
     def __init__(self):
+        self.list_of_trades=[]
+        self.last_long_or_short = None
+        self.last_bid_price = 0.0
+        self.last_ask_price = 0.0
+        self.last_entry_price = 0
+        self.last_closed_price = 0
+
         self.value = ''
         self.starting_date = 0
         self.start_time = 0
-        self.list_of_trades=[]
-        self.last_long_or_short = None
-        self.last_bid_price = 0
-        self.last_ask_price = 0
         self.last_closed_result_no_fee = 0
         self.total_result = 0
         self.previous_entry_price = 0
-        self.last_entry_price = 0
         self.final_session_result = 0
+        self.trade = []
 
         self.total_trades_result = 0
         self.list_of_trades_results=[]
