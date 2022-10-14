@@ -22,20 +22,30 @@ class Bot_class:
         print("")
     def get_future_with_1h_vol(self):
         not_found_volatilty_market = True
+        pos_or_neg = None
         while not_found_volatilty_market:
             time.sleep(2)
             obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
             #min_change_1h = 0.02
             all_futures = obj_ftx_methods.get_all_futures()
-            perp_list_of_dict = Test.get_list_of_perp_dict(all_futures)
+            #print(all_futures)
+            perp_list_of_dict = Test.get_list_of_enabled_perp_dict(all_futures)
             list_of_dict_vol_1h_rest = Test.get_list_dict_volatility_1h_restricted(perp_list_of_dict, self.controller.model.min_vol_1h)
+            print(list_of_dict_vol_1h_rest)
             highest_vol_dict = Test.get_highest_vol_dict(list_of_dict_vol_1h_rest)
+            print(" highest vol dict below")
+            print(highest_vol_dict)
+
             if bool(highest_vol_dict):
                 not_found_volatilty_market = False
                 print("mariusz")
+                if highest_vol_dict['change1h']>0:
+                    pos_or_neg = 1
+                elif highest_vol_dict['change1h']<0:
+                    pos_or_neg = -1
 
             #print(highest_vol_dict['name'])
-        return highest_vol_dict['name']
+        return highest_vol_dict['name'], pos_or_neg
 
     @submit_to_pool_executor(thread_pool_executor)
     def start_bot2(self):
@@ -50,21 +60,17 @@ class Bot_class:
         while mainWhile:
 
             while isVolatility is False:
-                self.controller.model.market_name = self.get_future_with_1h_vol()
-                isVolatility = True
-
+                self.controller.model.market_name,pos_or_neg  = self.get_future_with_1h_vol()
+                if pos_or_neg == 1:
+                    long_status = True
+                    isVolatility = True
+                elif pos_or_neg == -1:
+                    short_status = True
+                    isVolatility = True
 
             while isVolatility is True:
                 while long_status:
-                    #za każdym trejdem sprawdzać czy jest inny coin o większej zmienności i wtedy zmienić na innego coina - to ma sens
-                    #ponieważ i tak płącimy prowizję za zamknięcie pozycji więc lepiej jest jak gramy coina bardziej zmiennego
-                    #raczej tego coina bym wolał zmieniać tylko w przypadku ewentualnych przegranych trejdów
-                    przekręceniesie_stopLoss=""
-                    if przekręceniesie_stopLoss:
-                        #sprawdzenie_zmienności coinów - jeśli nasz spadł na dalekie miejsce to wtedy gramy ten najbardziej zmienny
-                        # jeśli inny
-                        pass
-
+                    pass
                 while short_status:
                     pass
                 while long_profit_status:

@@ -106,20 +106,20 @@ class Test:
         highest_volatility_1h = 0
         market_name = ""
         for x in list_of_dict:
-            if x['change1h']>highest_volatility_1h:
+            if abs(x['change1h']) > abs(highest_volatility_1h):
                 highest_volatility_1h = x['change1h']
-                market_name = x['name']
+                #market_name = x['name']
                 print(x['change1h'])
                 print(x['name'])
                 highest_vol_dict = x
         return highest_vol_dict
 
     @staticmethod
-    def get_list_of_perp_dict(list_of_dict: list):
+    def get_list_of_enabled_perp_dict(list_of_dict: list):
         new_list_of_dict=[]
         substring = "PERP"
         for x in list_of_dict:
-            if substring in x['name']:
+            if substring in x['name'] and x['enabled'] == True:
                 new_list_of_dict.append(x)
 
         return new_list_of_dict
@@ -128,10 +128,11 @@ class Test:
     def get_list_dict_volatility_1h_restricted(list_of_dict: list, min_volatility: float):
         new_list_of_dict = []
         for x in list_of_dict:
-            if min_volatility < x['change1h']:
+            if min_volatility < abs(x['change1h']):
                 new_list_of_dict.append(x)
                 print(x)
         return new_list_of_dict
+
 
 
 
