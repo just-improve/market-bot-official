@@ -23,6 +23,7 @@ class Bot_class:
     def get_future_with_1h_vol(self):
         not_found_volatilty_market = True
         pos_or_neg = None
+        highest_vol_dict = {}
         while not_found_volatilty_market:
             time.sleep(2)
             obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
@@ -56,27 +57,197 @@ class Bot_class:
         short_status = False
         long_profit_status = False
         short_profit_status = False
+        long_price_will = 0
+        short_price_will = 0
+        long_profit_price_will = 0
+        short_profit_price_will = 0
+        short_price_lps_will = 0
+        long_price_sps_will = 0
 
         while mainWhile:
 
             while isVolatility is False:
+                print("is volatility")
+
                 self.controller.model.market_name,pos_or_neg  = self.get_future_with_1h_vol()
+                print(self.controller.model.market_name)
+                print(pos_or_neg)
+
+                # long
                 if pos_or_neg == 1:
+                    print('pos_or_neg' + " pierwszy long ")
                     long_status = True
                     isVolatility = True
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+                    print(str(self.controller.model.last_bid_price) +" " +str(self.controller.model.last_bid_price))
+
+                    long_price_will = 0
+                    short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
+                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                    short_profit_price_will = 0
+                    long_price_sps_will = 0
+                    short_price_lps_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                    self.controller.model.list_of_trades.append(trade)
+
+                #short
                 elif pos_or_neg == -1:
                     short_status = True
                     isVolatility = True
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+                    print(str(self.controller.model.last_bid_price) +" " +str(self.controller.model.last_ask_price))
+
+                    long_price_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                    short_price_will = 0
+                    long_profit_price_will = 0
+                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                    long_price_sps_will = 0
+                    short_price_lps_will = 0
+
+                    date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                    trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                    self.controller.model.list_of_trades.append(trade)
 
             while isVolatility is True:
                 while long_status:
-                    pass
+                    time.sleep(self.controller.model.refresh_time)
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+
+                    short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
+                    long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                    long_price_will = 0
+                    short_profit_price_will = 0
+                    long_price_sps_will = 0
+                    short_price_lps_will = 0
+
+
+                    if self.controller.model.last_bid_price <= short_price_will:
+                        long_status = False
+                        short_status = True
+
+                        short_price_will = 0
+                        long_profit_price_will = 0
+                        long_price_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                        short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                        long_price_sps_will = 0
+                        short_price_lps_will = 0
+
+                        date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                        trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                        self.controller.model.list_of_trades.append(trade)
+
+                    elif self.controller.model.last_ask_price >= long_profit_price_will:
+                        long_profit_status = True
+                        long_status = False
+
+                        short_price_will = 0
+                        long_profit_price_will = 0
+                        long_price_will = 0
+                        short_profit_price_will = 0
+                        long_price_sps_will = 0
+                        short_price_lps_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
+
                 while short_status:
-                    pass
+                    time.sleep(self.controller.model.refresh_time)
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+
+                    short_price_will = 0
+                    long_profit_price_will = 0
+                    long_price_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                    short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                    long_price_sps_will = 0
+                    short_price_lps_will = 0
+
+                    if self.controller.model.last_ask_price > long_price_will:
+                        long_status = True
+                        short_status = False
+
+                        short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
+                        long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                        long_price_will = 0
+                        short_profit_price_will = 0
+                        long_price_sps_will = 0
+                        short_price_lps_will = 0
+
+                        date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                        trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                        self.controller.model.list_of_trades.append(trade)
+
+                    elif self.controller.model.last_bid_price < short_profit_price_will:
+                        short_profit_status = True
+                        short_status = False
+
+                        short_price_will = 0
+                        long_profit_price_will = 0
+                        long_price_will = 0
+                        short_profit_price_will = 0
+                        long_price_sps_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                        short_price_lps_will = 0
+
                 while long_profit_status:
-                    pass
+                    time.sleep(self.controller.model.refresh_time)
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+                    current_ask_decrease = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
+
+                    # update ceny wejścia w short gdy cena rośnie
+                    if short_price_lps_will < current_ask_decrease:
+                        short_price_lps_will = current_ask_decrease
+
+                    # wejście w short z long profit statusu
+                    if self.controller.model.last_bid_price <= short_price_lps_will:
+                        short_status = True
+                        long_profit_status = False
+
+                        short_price_will = 0
+                        long_profit_price_will = 0
+                        long_price_will = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+                        short_profit_price_will = self.controller.model.last_bid_price * self.controller.model.gap_profit_short
+                        long_price_sps_will = 0
+                        short_price_lps_will = 0
+
+                        date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                        trade = ["short", self.controller.model.last_bid_price, str(date_time_current)]
+                        self.controller.model.list_of_trades.append(trade)
+
                 while short_profit_status:
-                    pass
+                    time.sleep(self.controller.model.refresh_time)
+                    dict_future = obj_ftx_methods.get_future(self.controller.model.market_name)
+                    self.controller.model.last_ask_price = dict_future["ask"]
+                    self.controller.model.last_bid_price = dict_future["bid"]
+                    current_bid_increased = self.controller.model.last_bid_price * self.controller.model.gap_reverse_long
+
+                    #update ceny wejścia w long gdy cena spada
+                    if current_bid_increased < long_price_sps_will:
+                        long_price_sps_will = current_bid_increased
+
+                    #wejście w long z short profit statusu
+                    if self.controller.model.last_ask_price > long_price_sps_will:
+                        long_status = True
+                        short_profit_status = False
+
+                        short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_reverse_short
+                        long_profit_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_long
+                        long_price_will = 0
+                        short_profit_price_will = 0
+                        long_price_sps_will = 0
+                        short_price_lps_will = 0
+
+                        date_time_current = self.dt.datetime.now().replace(microsecond=0)
+                        trade = ["long", self.controller.model.last_ask_price, str(date_time_current)]
+                        self.controller.model.list_of_trades.append(trade)
+
             while isVolatility is False:
                 # zapisanie danych do pliku csv
                 pass
@@ -235,7 +406,7 @@ class Bot_class:
                     self.controller.model.short_price_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
                     self.view.prices_will_var.set("Prices will "+
                                                   str(self.controller.model.long_price_will) + " " + str(self.controller.model.short_price_will))
-                    short_price_lps_will = self.controller.model.last_ask_price * self.controller.model.gap_profit_short
+
                     print("W LongStatus do LongProfitStatus ")
 
             while short_status and self.controller.model.stop_bot_by_stop_button is False:
