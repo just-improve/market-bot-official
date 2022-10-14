@@ -21,7 +21,7 @@ class Controller:
         obj = Bot_class(self.model.market_name, self.model.gap_reverse_long, self.model.gap_reverse_short, self.model.gap_profit_long,
                         self.model.gap_profit_short, self.model.refresh_time, self.model.fee, self.view, self)
 
-        obj.start_bot2()
+        obj.start_bot()
 
 
     def save_file_to_csv(self):
