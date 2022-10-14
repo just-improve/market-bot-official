@@ -94,35 +94,44 @@ class Test:
             sum_of_results.append(suma)
         return sum_of_results
 
-    #@staticmethod
-    #def sum_fee (exchange_fee:float):
-        #list_of_fee=[]
-        #list_of_fee.append(exchange_fee)
-        #return
+    @staticmethod
+    def sort_dict(d: dict):
+        new_dict = sorted(d.items(), key=lambda x: x[1], reverse=True)
+        return new_dict
 
 
+    @staticmethod
+    def get_highest_vol_dict(list_of_dict:list):
+        highest_vol_dict = {}
+        highest_volatility_1h = 0
+        market_name = ""
+        for x in list_of_dict:
+            if x['change1h']>highest_volatility_1h:
+                highest_volatility_1h = x['change1h']
+                market_name = x['name']
+                print(x['change1h'])
+                print(x['name'])
+                highest_vol_dict = x
+        return highest_vol_dict
 
-    list_of_results = [2,5,-6,18,-4]
-    last_res = list_of_results[len(list_of_results)-1]
-    #print(last_res)
+    @staticmethod
+    def get_list_of_perp_dict(list_of_dict: list):
+        new_list_of_dict=[]
+        substring = "PERP"
+        for x in list_of_dict:
+            if substring in x['name']:
+                new_list_of_dict.append(x)
 
+        return new_list_of_dict
 
-    trade1= ("long",1235)
-    trade2= ("short",1035)
-    trade3= ("long",1235)
-    trade4= ("short",1435)
-
-    trade_list = []
-    trade_list.append(trade1)
-    trade_list.append(trade2)
-    trade_list.append(trade3)
-    trade_list.append(trade4)
-
-    all_results = calculate_results(trade_list)
-    last_result = calculate_last_result(trade_list)
-    #print(all_results)
-    #print(last_result)
-    print("test.py\ntest")
+    @staticmethod
+    def get_list_dict_volatility_1h_restricted(list_of_dict: list, min_volatility: float):
+        new_list_of_dict = []
+        for x in list_of_dict:
+            if min_volatility < x['change1h']:
+                new_list_of_dict.append(x)
+                print(x)
+        return new_list_of_dict
 
 
 

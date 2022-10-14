@@ -20,6 +20,60 @@ class Bot_class:
 
     def __del__(self):
         print("")
+    def get_future_with_1h_vol(self):
+        obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
+        min_change_1h = 0.02
+        all_futures = obj_ftx_methods.get_all_futures()
+        perp_list_of_dict = Test.get_list_of_perp_dict(all_futures)
+        list_of_dict_vol_1h_rest = Test.get_list_dict_volatility_1h_restricted(perp_list_of_dict, min_change_1h)
+        highest_vol_dict = Test.get_highest_vol_dict(list_of_dict_vol_1h_rest)
+        print("mariusz")
+        print(highest_vol_dict['name'])
+        return highest_vol_dict['name']
+
+    @submit_to_pool_executor(thread_pool_executor)
+    def start_bot2(self):
+        obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
+        mainWhile = True
+        isVolatility = False
+        long_status = False
+        short_status = False
+        long_profit_status = False
+        short_profit_status = False
+
+        while mainWhile:
+
+            while isVolatility is False:
+                self.get_future_with_1h_vol()
+                time.sleep(120)
+
+                #warunek sprawdzający czy jest zmienność jeśli jest zmienność to wtedy zmienia boola i przechodzi do initialize
+                if 3 > 2:
+                    print("Pawel")
+                    isVolatility = False
+
+
+            while isVolatility is True:
+                while long_status:
+                    #za każdym trejdem sprawdzać czy jest inny coin o większej zmienności i wtedy zmienić na innego coina - to ma sens
+                    #ponieważ i tak płącimy prowizję za zamknięcie pozycji więc lepiej jest jak gramy coina bardziej zmiennego
+                    #raczej tego coina bym wolał zmieniać tylko w przypadku ewentualnych przegranych trejdów
+                    przekręceniesie_stopLoss=""
+                    if przekręceniesie_stopLoss:
+                        #sprawdzenie_zmienności coinów - jeśli nasz spadł na dalekie miejsce to wtedy gramy ten najbardziej zmienny
+                        # jeśli inny
+                        pass
+
+                while short_status:
+                    pass
+                while long_profit_status:
+                    pass
+                while short_profit_status:
+                    pass
+            while isVolatility is False:
+                # zapisanie danych do pliku csv
+                pass
+
 
     @submit_to_pool_executor(thread_pool_executor)
     def start_bot(self):
