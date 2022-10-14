@@ -24,37 +24,51 @@ class View(tk.Tk):
         self.main_frm.pack(padx=self.PAD, pady=self.PAD)
 
     def _make_entry(self):  # single underscore is private method
-        self.market_name_entry = ttk.Entry(self.main_frm, justify='right')
-        self.market_name_entry.insert(1, "CEL-PERP")
-        self.market_name_entry.pack(fill='x')
 
-        self.gap_reverse_long_init = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_long_init.insert(1, 1.0002)
-        self.gap_reverse_long_init.pack(fill='x')
+        self.minVolatility1h_lab = ttk.Label(self.main_frm, text="MinVolatility1h")
+        self.minVolatility1h_lab.pack(fill='x')
 
-        self.gap_reverse_short_init = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_short_init.insert(1, 1.0002)
-        self.gap_reverse_short_init.pack(fill='x')
+        self.min_vol_1h_entry = ttk.Entry(self.main_frm, justify='right')
+        self.min_vol_1h_entry.insert(1, 0.02)
+        self.min_vol_1h_entry.pack(fill='x')
+
+        self.gap_reverse_long_entry_lab = ttk.Label(self.main_frm, text="gap_reverse_long_entry")
+        self.gap_reverse_long_entry_lab.pack(fill='x')
 
         self.gap_reverse_long_entry = ttk.Entry(self.main_frm, justify='right')
         self.gap_reverse_long_entry.insert(1,1.0001)
         self.gap_reverse_long_entry.pack(fill='x')
 
+        self.gap_reverse_short_entry_lab = ttk.Label(self.main_frm, text="gap_reverse_short_entry")
+        self.gap_reverse_short_entry_lab.pack(fill='x')
+
         self.gap_reverse_short_entry = ttk.Entry(self.main_frm, justify='right')
         self.gap_reverse_short_entry.insert(0, 0.9999)
         self.gap_reverse_short_entry.pack(fill='x')
+
+        self.gap_profit_long_entry_lab = ttk.Label(self.main_frm, text="gap_profit_long_entry")
+        self.gap_profit_long_entry_lab.pack(fill='x')
 
         self.gap_profit_long_entry = ttk.Entry(self.main_frm, justify='right')
         self.gap_profit_long_entry.insert(0,1.001)
         self.gap_profit_long_entry.pack(fill='x')
 
+        self.gap_profit_short_entry_lab = ttk.Label(self.main_frm, text="gap_profit_short_entry")
+        self.gap_profit_short_entry_lab.pack(fill='x')
+
         self.gap_profit_short_entry = ttk.Entry(self.main_frm, justify='right')
         self.gap_profit_short_entry.insert(0,0.999)
         self.gap_profit_short_entry.pack(fill='x')
 
+        self.refresh_time_lab = ttk.Label(self.main_frm, text="refresh time")
+        self.refresh_time_lab.pack(fill='x')
+
         self.refresh_time_entry = ttk.Entry(self.main_frm, justify='right')
         self.refresh_time_entry.insert(0,2)
         self.refresh_time_entry.pack(fill='x')
+
+        self.market_fee_lab = ttk.Label(self.main_frm, text="market fee")
+        self.market_fee_lab.pack(fill='x')
 
         self.market_fee_entry = ttk.Entry(self.main_frm, justify='right')
         self.market_fee_entry.insert(0, 0.00064505)

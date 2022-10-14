@@ -12,7 +12,7 @@ from Ftx_methods import FtxClientWJ
 
 class Bot_class:
 
-    def __init__(self, market: str, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view, controller):
+    def __init__(self, gap_long, gap_short, gap_profit_long, gap_profit_short, refresh_time, fee: float , view, controller):
         self.controller = controller
         self.view = view
         self.dt = datetime
@@ -21,14 +21,20 @@ class Bot_class:
     def __del__(self):
         print("")
     def get_future_with_1h_vol(self):
-        obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
-        min_change_1h = 0.02
-        all_futures = obj_ftx_methods.get_all_futures()
-        perp_list_of_dict = Test.get_list_of_perp_dict(all_futures)
-        list_of_dict_vol_1h_rest = Test.get_list_dict_volatility_1h_restricted(perp_list_of_dict, min_change_1h)
-        highest_vol_dict = Test.get_highest_vol_dict(list_of_dict_vol_1h_rest)
-        print("mariusz")
-        print(highest_vol_dict['name'])
+        not_found_volatilty_market = True
+        while not_found_volatilty_market:
+            time.sleep(2)
+            obj_ftx_methods = FtxClientWJ()  #Na pewno to jest potrzebne
+            #min_change_1h = 0.02
+            all_futures = obj_ftx_methods.get_all_futures()
+            perp_list_of_dict = Test.get_list_of_perp_dict(all_futures)
+            list_of_dict_vol_1h_rest = Test.get_list_dict_volatility_1h_restricted(perp_list_of_dict, self.controller.model.min_vol_1h)
+            highest_vol_dict = Test.get_highest_vol_dict(list_of_dict_vol_1h_rest)
+            if bool(highest_vol_dict):
+                not_found_volatilty_market = False
+                print("mariusz")
+
+            #print(highest_vol_dict['name'])
         return highest_vol_dict['name']
 
     @submit_to_pool_executor(thread_pool_executor)
@@ -44,13 +50,8 @@ class Bot_class:
         while mainWhile:
 
             while isVolatility is False:
-                self.get_future_with_1h_vol()
-                time.sleep(120)
-
-                #warunek sprawdzający czy jest zmienność jeśli jest zmienność to wtedy zmienia boola i przechodzi do initialize
-                if 3 > 2:
-                    print("Pawel")
-                    isVolatility = False
+                self.controller.model.market_name = self.get_future_with_1h_vol()
+                isVolatility = True
 
 
             while isVolatility is True:
