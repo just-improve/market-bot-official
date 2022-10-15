@@ -9,6 +9,9 @@ class Model:
         self.last_ask_price = 0.0
         self.last_entry_price = 0
         self.last_closed_price = 0
+        self.market_name=""
+        self.previous_market_name = ""
+        self.previous_long_or_short = ""
 
         self.value = ''
         self.starting_date = 0
@@ -30,7 +33,6 @@ class Model:
         self.last_trade = 0
         self.stop_bot_by_stop_button=False
 
-        self.market_name=""
         #self.min_vol_1h = 0
 
     def storing_starting_settings_in_model(self, minimum_vol_1h, gap_reverse_long, gap_reverse_short, gap_profit_long, gap_profit_short, refresh_time, fee):

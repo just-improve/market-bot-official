@@ -90,6 +90,10 @@ class View(tk.Tk):
         self.label_prices_will = ttk.Label(self.main_frm, textvariable=self.prices_will_var)
         self.label_prices_will.pack()
 
+        self.status_info_var = tk.StringVar()
+        self.status_info_lab = ttk.Label(self.main_frm, textvariable=self.status_info_var)
+        self.status_info_lab.pack()
+
 
     def _make_button(self):  # single underscore is private method
 

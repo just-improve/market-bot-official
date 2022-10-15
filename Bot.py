@@ -20,6 +20,8 @@ class Bot_class:
 
     def __del__(self):
         print("")
+
+
     def get_future_with_1h_vol(self):
         not_found_volatilty_market = True
         pos_or_neg = None
@@ -36,6 +38,14 @@ class Bot_class:
             highest_vol_dict = Test.get_highest_vol_dict(list_of_dict_vol_1h_rest)
             print(" highest vol dict below")
             print(highest_vol_dict)
+
+            dict_vol_found = bool(highest_vol_dict)
+            if dict_vol_found and self.controller.model.previous_market_name == highest_vol_dict['name']:
+                if self.controller.model.previous_long_or_short=="long" and highest_vol_dict['change1h']>0 or self.controller.model.previous_long_or_short=="short" and highest_vol_dict['change1h']<0:
+                    print("ten sam coin grany powtórka replay wiaderny")
+                    print(highest_vol_dict['name'])
+                    continue
+            #if self.controller.model.previous_long_or_short=="long",
 
             if bool(highest_vol_dict):
                 not_found_volatilty_market = False
@@ -72,7 +82,7 @@ class Bot_class:
             print("mainwhile")
             while isVolatility is False:
 
-                #ta metoda to pętla i jeśli jest zmienność to zwraca market i 1 lub -1
+                #ta metoda to pętla i jeśli jest zmienność to zwraca market i 1 lub -1, tu musi zwrócić jeszcze zmienność 1h albo stworzyć model class nową z wartościami trejdu, bo za chwilę możemy dodać rsi volume24h i inne
                 self.controller.model.market_name,pos_or_neg  = self.get_future_with_1h_vol()
 
                 if pos_or_neg == 1:
@@ -132,16 +142,26 @@ class Bot_class:
                     self.view.total_result_var.set(str(long_profit_price_will) + " long_profit_price_will")
                     self.view.list_of_trades_var.set(str(self.controller.model.trade) + " trade")
                     self.view.prices_will_var.set(str(self.controller.model.last_bid_price) + str(self.controller.model.last_ask_price) + " bid-ask " +self.controller.model.market_name)
+                    self.view.status_info_var.set(" ls "+str(long_status) + " ss "+ str(short_status) + " lps " +str(long_profit_status) + " sps " +str(short_profit_status)+ " ass "+str(after_stoploss_status)+ " is_vol " + str(isVolatility))
+
+                    isVolatility = False
+                    after_stoploss_status = False
+                    long_status = False
+                    short_status = False
+                    long_profit_status = False
+                    short_profit_status = False
 
                     # zamkniecie longa stoploss
                     if self.controller.model.last_bid_price <= short_price_will:
                         long_status = False
+                        short_status = False
                         after_stoploss_status = True
                         self.controller.model.last_closed_price = self.controller.model.last_bid_price
 
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
                         self.controller.model.trade.append(str(date_time_current))
                         self.controller.model.trade.append(self.controller.model.last_closed_price)
+                        self.controller.model.trade.append("loose")
                         self.controller.model.list_of_trades.append(self.controller.model.trade)
 
                     elif self.controller.model.last_ask_price >= long_profit_price_will:
@@ -159,6 +179,7 @@ class Bot_class:
                     self.view.total_result_var.set(str(short_profit_price_will) + " short_profit_price_will")
                     self.view.list_of_trades_var.set(str(self.controller.model.trade) + " trade")
                     self.view.prices_will_var.set(str(self.controller.model.last_bid_price) + str(self.controller.model.last_ask_price) + " bid-ask " +self.controller.model.market_name)
+                    self.view.status_info_var.set(" ls "+str(long_status) + " ss "+ str(short_status) + " lps " +str(long_profit_status) + " sps " +str(short_profit_status)+ " ass "+str(after_stoploss_status)+ " is_vol " + str(isVolatility))
 
                     #zamkniecie shorta stoploss
                     if self.controller.model.last_ask_price > long_price_will:
@@ -171,6 +192,7 @@ class Bot_class:
 
                         self.controller.model.trade.append(str(date_time_current))
                         self.controller.model.trade.append(self.controller.model.last_closed_price)
+                        self.controller.model.trade.append("loose")
                         self.controller.model.list_of_trades.append(self.controller.model.trade)
 
                         counter_of_trades = counter_of_trades + 1
@@ -191,8 +213,7 @@ class Bot_class:
                     #self.view.total_result_var.set(str(short_profit_price_will) + " short_profit_price_will")
                     self.view.list_of_trades_var.set(str(self.controller.model.trade) + " trade")
                     self.view.prices_will_var.set(str(self.controller.model.last_bid_price) + str(self.controller.model.last_ask_price) + " bid-ask " +self.controller.model.market_name)
-
-
+                    self.view.status_info_var.set(" ls "+str(long_status) + " ss "+ str(short_status) + " lps " +str(long_profit_status) + " sps " +str(short_profit_status)+ " ass "+str(after_stoploss_status)+ " is_vol " + str(isVolatility))
 
                     # update ceny wejścia w short gdy cena rośnie
                     if short_price_lps_will < current_ask_decrease:
@@ -209,6 +230,7 @@ class Bot_class:
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
                         self.controller.model.trade.append(str(date_time_current))
                         self.controller.model.trade.append(self.controller.model.last_closed_price)
+                        self.controller.model.trade.append("win")
                         self.controller.model.list_of_trades.append(self.controller.model.trade)
 
                 while short_profit_status:
@@ -222,7 +244,7 @@ class Bot_class:
                     #self.view.total_result_var.set(str(short_profit_price_will) + " short_profit_price_will")
                     self.view.list_of_trades_var.set(str(self.controller.model.trade) + " trade")
                     self.view.prices_will_var.set(str(self.controller.model.last_bid_price) + str(self.controller.model.last_ask_price) + " bid-ask " +self.controller.model.market_name)
-
+                    self.view.status_info_var.set(" ls "+str(long_status) + " ss "+ str(short_status) + " lps " +str(long_profit_status) + " sps " +str(short_profit_status)+ " ass "+str(after_stoploss_status)+ " is_vol " + str(isVolatility))
 
                     #update ceny wejścia w long gdy cena spada
                     if current_bid_increased < long_price_sps_will:
@@ -231,7 +253,7 @@ class Bot_class:
                     #wejście w long z short profit statusu
                     if self.controller.model.last_ask_price > long_price_sps_will:
                         short_status = False
-                        long_profit_status = False
+                        short_profit_status = False
                         after_stoploss_status = True
 
                         self.controller.model.last_closed_price = self.controller.model.last_ask_price
@@ -239,11 +261,18 @@ class Bot_class:
                         date_time_current = self.dt.datetime.now().replace(microsecond=0)
                         self.controller.model.trade.append(str(date_time_current))
                         self.controller.model.trade.append(self.controller.model.last_closed_price)
+                        self.controller.model.trade.append("win")
                         self.controller.model.list_of_trades.append(self.controller.model.trade)
 
                 while after_stoploss_status:
                     print("after stop loss")
                     print(self.controller.model.list_of_trades)
+                    self.view.status_info_var.set(" ls "+str(long_status) + " ss "+ str(short_status) + " lps " +str(long_profit_status) + " sps " +str(short_profit_status)+ " ass "+str(after_stoploss_status)+ " is_vol " + str(isVolatility))
+                    #trzeba by wykluczyć ten sm kierunek trejdu w taki spósób że trzeba by stworzyć zmienną która sprawdzana by była przez metodę
+                    self.controller.model.previous_market_name = self.controller.model.market_name
+                    self.controller.model.previous_long_or_short = self.controller.model.last_long_or_short
+
+
                     self.controller.model.market_name = ""
                     self.controller.model.trade = []
                     self.controller.model.last_long_or_short = ""
