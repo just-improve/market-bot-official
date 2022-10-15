@@ -56,7 +56,7 @@ class Bot_class:
                     pos_or_neg = -1
 
             #print(highest_vol_dict['name'])
-        return highest_vol_dict['name'], pos_or_neg
+        return highest_vol_dict['name'],highest_vol_dict['change1h'], pos_or_neg
 
     @submit_to_pool_executor(thread_pool_executor)
     def start_bot2(self):
@@ -83,7 +83,7 @@ class Bot_class:
             while isVolatility is False:
 
                 #ta metoda to pętla i jeśli jest zmienność to zwraca market i 1 lub -1, tu musi zwrócić jeszcze zmienność 1h albo stworzyć model class nową z wartościami trejdu, bo za chwilę możemy dodać rsi volume24h i inne
-                self.controller.model.market_name,pos_or_neg  = self.get_future_with_1h_vol()
+                self.controller.model.market_name, self.controller.model.change1h, pos_or_neg  = self.get_future_with_1h_vol()
 
                 if pos_or_neg == 1:
                     counter_of_trades = 0
@@ -105,7 +105,7 @@ class Bot_class:
                     short_price_lps_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    self.controller.model.trade = [str(date_time_current), self.controller.model.market_name,self.controller.model.last_long_or_short, self.controller.model.last_entry_price]
+                    self.controller.model.trade = [self.controller.model.change1h, str(date_time_current), self.controller.model.market_name,self.controller.model.last_long_or_short, self.controller.model.last_entry_price]
                 #short
                 elif pos_or_neg == -1:
                     counter_of_trades = 0
@@ -128,7 +128,7 @@ class Bot_class:
                     short_price_lps_will = 0
 
                     date_time_current = self.dt.datetime.now().replace(microsecond=0)
-                    self.controller.model.trade = [str(date_time_current), self.controller.model.market_name,self.controller.model.last_long_or_short, self.controller.model.last_entry_price ]
+                    self.controller.model.trade = [self.controller.model.change1h, str(date_time_current), self.controller.model.market_name,self.controller.model.last_long_or_short, self.controller.model.last_entry_price ]
 
             while isVolatility is True:
 

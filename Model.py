@@ -11,6 +11,7 @@ class Model:
         self.last_closed_price = 0
         self.market_name=""
         self.previous_market_name = ""
+        self.change1h = 0.0
         self.previous_long_or_short = ""
 
         self.value = ''
