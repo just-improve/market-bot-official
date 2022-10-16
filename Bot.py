@@ -141,7 +141,7 @@ class Bot_class:
                         y.last_long_or_short = "long"
                         y.end_trade_time = "9;000"
                         y.create_trade_fileds_store_in_list_trades()
-                        self.list_of_all_trades.append(y.trade)
+                        self.controller.model.list_of_all_trades.append(y.trade)
                         y.reset_obj_data_fields()
 
                     #long_profit
@@ -167,7 +167,7 @@ class Bot_class:
                             y.last_long_or_short = "short"
                             y.end_trade_time = "11;00s"
                             y.create_trade_fileds_store_in_list_trades()
-                            self.list_of_all_trades.append(y.trade)
+                            self.controller.model.list_of_all_trades.append(y.trade)
                             y.reset_obj_data_fields()
 
                         #short_profit
@@ -191,7 +191,7 @@ class Bot_class:
                             y.closed_price = x['bid']
                             y.last_long_or_short = "long"
                             y.create_trade_fileds_store_in_list_trades()
-                            self.list_of_all_trades.append(y.trade)
+                            self.controller.model.list_of_all_trades.append(y.trade)
                             y.reset_obj_data_fields()
 
                         #update ceny long_profit_status
@@ -212,7 +212,7 @@ class Bot_class:
                             y.closed_price = x['ask']
                             y.last_long_or_short = "short"
                             y.create_trade_fileds_store_in_list_trades()
-                            self.list_of_all_trades.append(y.trade)
+                            self.controller.model.list_of_all_trades.append(y.trade)
                             y.reset_obj_data_fields()
 
                         #update ceny short_profit status
@@ -229,12 +229,16 @@ class Bot_class:
         self.setting_starting_coins()
         self.list_of_playing_obj_markets = self.get_list_of_playing_obj_markets()
         self.print_details_of_obj_list(self.list_of_playing_obj_markets)
+        self.controller.model.list_of_playing_markets_model = self.list_of_playing_obj_markets
         while 1:
-            time.sleep(10)
-            # po co jest ta metoda? po co mi ta lista tutaj?
-            #self.list_of_playing_obj_markets = self.get_list_of_playing_obj_markets()
+            time.sleep(2)
             self.update_status_only_close(obj_ftx_methods)
-            print(self.list_of_all_trades)
+            self.list_of_playing_obj_markets = self.get_list_of_playing_obj_markets()
+            #metoda dająca listę coinów nadających się do gry
+            # mjać listę coinów nadających się do gry i grających trzeba po prostu uruchamiać coiny nadające się do gry niegrające
+            #trzeba również uruchomić uprzednio zamnięte coiny w przeciwnych kierunkach niż przed chwilą zamnęliśmy
+            #tam będzie sprawdzenie coinów
+            print(self.controller.model.list_of_all_trades)
             #self.print_details_of_obj_list(self.list_of_playing_obj_markets)
 
 

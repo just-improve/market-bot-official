@@ -40,7 +40,6 @@ class MarketModel:
         self.short_price_lps_will = 0
         self.long_price_sps_will = 0
         self.stoploss_price_will = 0
-        self.counter_of_trades = 0
         self.trade = []
 
     def create_trade_fileds_store_in_list_trades(self):

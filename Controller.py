@@ -1,6 +1,7 @@
 import csv
 import pandas as pd
 from Bot import Bot_class
+from Market import MarketModel
 from Model import Model
 from View import View
 from test import Test
@@ -11,6 +12,7 @@ class Controller:
     def __init__(self):
         self.view = View(self)
         self.model = Model()
+        #self.market = MarketModel()
 
     def main(self):
         self.view.main()

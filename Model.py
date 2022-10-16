@@ -3,6 +3,8 @@ from Bot import Bot_class
 #model to czyste dane
 class Model:
     def __init__(self):
+        self.list_of_playing_markets_model = []
+        self.list_of_all_trades = []
         self.market_name = ""
         self.gap_reverse_long =0.0
         self.gap_reverse_short =0.0

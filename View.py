@@ -106,12 +106,51 @@ class View(tk.Tk):
         btn2 = ttk.Button(self.main_frm, text='Show trade list', command=self.show_trades)
         btn2.pack(fill='x')
 
+        btn3 = ttk.Button(self.main_frm, text='Show playing markets', command=self.show_playing_markets)
+        btn3.pack(fill='x')
+
+        btn4 = ttk.Button(self.main_frm, text='Show fields of playing markets', command=self.show_fields_of_playning_market)
+        btn4.pack(fill='x')
+
     def stop_main_while(self):
         self.controller.on_button_click_while_bot_stop()
 
     def show_trades(self):
-        list_of_tr = self.controller.list_as_string_in_new_line(self.controller.model.list_of_trades)
+        list_of_tr = self.controller.list_as_string_in_new_line(self.controller.model.list_of_all_trades)
         messagebox.showinfo("showinfo", list_of_tr)
+
+    def show_playing_markets(self):
+        list_of_tr =  str(len(self.controller.model.list_of_playing_markets_model)) + '\n'
+        #len_of_list_obj = str(len(self.controller.model.list_of_playing_markets_model)) + '\n'
+        for x in self.controller.model.list_of_playing_markets_model:
+            list_of_tr=list_of_tr+x.market_name+'\n'
+
+        #list_of_tr = self.controller.list_as_string_in_new_line(self.controller.model.list_of_playing_markets_model)
+        messagebox.showinfo("showinfo", list_of_tr)
+
+    def show_fields_of_playning_market(self):
+        list_as_str = ""
+        for x in self.controller.model.list_of_playing_markets_model:
+            print("")
+            list_of_fileds = []
+            list_of_fileds.append(str(x.market_name))
+            list_of_fileds.append(str(x.change1h) + " change1h")
+            list_of_fileds.append(str(len(self.controller.model.list_of_playing_markets_model)) + " len os playing obj ")
+            list_of_fileds.append(str(x.won_or_lost) + " won_or_lost")
+            list_of_fileds.append(str(x.is_playing) + " is playing")
+            list_of_fileds.append(str(x.status) + " status")
+            list_of_fileds.append(str(x.bid) + " " + str(x.ask) + " bidy aski")
+            list_of_fileds.append(str(x.entry_price) + " entry_price")
+            list_of_fileds.append(str(x.closed_price) + " closed_price")
+            list_of_fileds.append(str(x.stoploss_price_will) + " stoploss_price_will")
+            list_of_fileds.append(str(x.long_profit_price_will) + " long_profit_price_will")
+            list_of_fileds.append(str(x.short_profit_price_will) + " short_profit_price_will")
+
+            for x in list_of_fileds:
+                list_as_str = list_as_str + x + '\n'
+            #print(list_as_str)
+
+        messagebox.showinfo("showinfo", list_as_str)
 
 
 
