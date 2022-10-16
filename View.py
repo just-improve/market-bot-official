@@ -36,28 +36,28 @@ class View(tk.Tk):
         self.gap_reverse_long_entry_lab.pack(fill='x')
 
         self.gap_reverse_long_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_long_entry.insert(1,1.005)
+        self.gap_reverse_long_entry.insert(1,1.03)
         self.gap_reverse_long_entry.pack(fill='x')
 
         self.gap_reverse_short_entry_lab = ttk.Label(self.main_frm, text="gap_reverse_short_entry")
         self.gap_reverse_short_entry_lab.pack(fill='x')
 
         self.gap_reverse_short_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_reverse_short_entry.insert(0, 0.995)
+        self.gap_reverse_short_entry.insert(0, 0.97)
         self.gap_reverse_short_entry.pack(fill='x')
 
         self.gap_profit_long_entry_lab = ttk.Label(self.main_frm, text="gap_profit_long_entry")
         self.gap_profit_long_entry_lab.pack(fill='x')
 
         self.gap_profit_long_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_profit_long_entry.insert(0,1.01)
+        self.gap_profit_long_entry.insert(0,1.005)
         self.gap_profit_long_entry.pack(fill='x')
 
         self.gap_profit_short_entry_lab = ttk.Label(self.main_frm, text="gap_profit_short_entry")
         self.gap_profit_short_entry_lab.pack(fill='x')
 
         self.gap_profit_short_entry = ttk.Entry(self.main_frm, justify='right')
-        self.gap_profit_short_entry.insert(0,0.99)
+        self.gap_profit_short_entry.insert(0,0.995)
         self.gap_profit_short_entry.pack(fill='x')
 
         self.refresh_time_lab = ttk.Label(self.main_frm, text="refresh time")
