@@ -115,6 +115,13 @@ class Test:
         return highest_vol_dict
 
     @staticmethod
+    def get_list_of_markets_name(list_of_dict: list):
+        list_of_markets = []
+        for x in list_of_dict:
+            list_of_markets.append(x['name'])
+        return list_of_markets
+
+    @staticmethod
     def get_list_of_enabled_perp_dict(list_of_dict: list):
         new_list_of_dict=[]
         substring = "PERP"
